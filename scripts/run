@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+# Debug|Release
+CONFIGURATION=Release
+
+set -e
+APP_HOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )/"
+source "$APP_HOME/scripts/.functions.sh"
+
+run() {
+    check_dependency_dotnet
+
+    ./scripts/env-vars-check
+
+    cd $APP_HOME
+
+    dotnet restore --verbosity=quiet
+
+    echo "Starting StorageAdapter ..."
+    dotnet run --configuration $CONFIGURATION --project WebService/*.csproj
+}
+
+run_in_sandbox() {
+    cd $APP_HOME
+    ./scripts/run-in-sandbox
+}
+
+if [[ "$1" == "--in-sandbox" || "$1" == "-s" ]]; then
+    run_in_sandbox
+else
+    run
+fi
+
+set +e

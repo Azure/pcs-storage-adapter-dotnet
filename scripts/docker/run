@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# Note: use lowercase names for the Docker images
+DOCKER_IMAGE="azureiotpcs/pcs-storage-adapter-dotnet:0.1-SNAPSHOT"
+
+set -e
+APP_HOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && cd .. && pwd )/"
+source "$APP_HOME/scripts/.functions.sh"
+
+run_container() {
+    check_dependency_docker
+
+    $APP_HOME/scripts/env-vars-check
+
+    # Some settings are used to connect to an external dependency, e.g. Azure IoT Hub and IoT Hub Manager API
+    # Depending on which settings and which dependencies are needed, edit the list of variables
+    echo "Starting StorageAdapter ..."
+    docker run -it -p $PCS_STORAGEADAPTER_WEBSERVICE_PORT:8080 \
+        -e "PCS_STORAGEADAPTER_WEBSERVICE_PORT=8080" \
+        -e "PCS_IOTHUB_CONN_STRING=$PCS_IOTHUB_CONN_STRING" \
+        -e "PCS_IOTHUBMANAGER_WEBSERVICE_HOST=$PCS_IOTHUBMANAGER_WEBSERVICE_HOST" \
+        -e "PCS_IOTHUBMANAGER_WEBSERVICE_PORT=$PCS_IOTHUBMANAGER_WEBSERVICE_PORT" \
+        "$DOCKER_IMAGE"
+}
+
+run_container
+
+set +e
