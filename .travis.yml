@@ -1,0 +1,18 @@
+language: csharp
+dotnet: 1.0.3
+dist: trusty
+sudo: false
+cache:
+  directories:
+  - "$HOME/.nuget/"
+before_install:
+- set -e
+addons:
+  apt:
+    packages:
+    - dotnet-sharedframework-microsoft.netcore.app-1.1.2
+script:
+- bash ./$CODEBASE/scripts/build
+notifications:
+  slack:
+    secure: hCgRbUDiaLiJ7UkiYmPv+xpsNNc2q+ZOOWWDX9NXT2fdmF6TKMCEtvCqFlFHuO5/swEZQisuoMTv4/TrqzRVXoS9dJiVkgTDlWhZ3kwsYP86Bz9kycqX5BtNRFNfAls6Y0jcg96Y7gn3BGLKE0vpIBPOy+xRczztIxKRR0iKSmIpcA+QwfrvjDxd/tSA3vKyX+E+K93E8hmrv8GTUq2YwMtruuPszvuC7R1ONEGCLgndGucZpDYnteknG9xuiPum3AqC3BRWkBGmnZARIFX7cTjjy7p1+3z/jrMMPI9Pr/+GcBgNwxczcTSePKxkn9CaFt2S6FSjuk7VIzKrxlQUJKDSaFGjnaKleQGFQXM0u3THphsiUarQC9krEt3KsQv8VHh5O+enEH6igJObrlvi65u7wgW6C00gUuHOVUm29CNcbSNr3ndC4bOQfbeNtuFdTt/1prUWc28Upjsgm3vj4S8x/HjxPAweP7rxJwIrTl+yPABuazPtwDUtBxnlfQ0Hy9C4pzEjlM6Yd/XTROLstegg9rBOzAjIpLMhG3GQgnMFbRNS39GVOEUx8IkpGLDr+dMM5/LVosNSX02OKEj9yK5KhkFspEftARzBh+iy04H8RNVJStd3sBW+slIhKxAgHBBkmuD1CEG4fVaaZ//a3FsPVJUh6ToLhQou1rC++hU=
