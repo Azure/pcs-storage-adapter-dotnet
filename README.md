@@ -24,9 +24,9 @@ How to use it
 1. When the solution is loaded, right click on the `WebService` project,
    select `Properties` and go to the `Debug` section.
 1. Add a new environment variable with name
-   `PCS_STORAGEADAPTER_WEBSERVICE_PORT` and value `9001`.
+   `PCS_STORAGEADAPTER_WEBSERVICE_PORT` and value `9022`.
 1. In the same section set the `App URL` to
-   `http://localhost:9024/v1/status`
+   `http://localhost:9022/v1/status`
 1. Save the settings and Run the WebService project, the web service status
    should appear in your browser, in JSON format.
 
@@ -37,7 +37,7 @@ How to use it
    create a new `.NET Project` configuration.
 1. In the configuration select the WebService project
 1. Add a new environment variable with name
-   `PCS_STORAGEADAPTER_WEBSERVICE_PORT` and value `9001`.
+   `PCS_STORAGEADAPTER_WEBSERVICE_PORT` and value `9022`.
 1. Save the settings and run the configuration just created, from the IDE
    toolbar.
 1. You should see the service bootstrap messages in IntelliJ Run window,
