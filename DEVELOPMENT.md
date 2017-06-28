@@ -42,23 +42,6 @@ adapters, in `appsettings.ini`. The INI format allows to store values in a
 readable format, with comments. The application also supports inserting
 environment variables, such as credentials and networking details.
 
-Azure IoT Hub setup
-===================
-
-At some point you will probably want to setup your Azure IoT Hub, for
-development and integration tests.
-
-The project includes some Bash scripts to help you with this setup:
-
-* Create new IoT Hub: `./scripts/iothub/create-hub.sh`
-* List existing hubs: `./scripts/iothub/list-hubs.sh`
-* Show IoT Hub details (e.g. keys): `./scripts/iothub/show-hub.sh`
-
-and in case you had multiple Azure subscriptions:
-
-* Show subscriptions list: `./scripts/iothub/list-subscriptions.sh`
-* Change current subscription: `./scripts/iothub/select-subscription.sh`
-
 Development setup
 =================
 
@@ -69,10 +52,6 @@ to install in your environment, so that you can run all the scripts
 and ensure that your IDE works as expected.
 
 * [.NET Core](https://dotnet.github.io)
-
-We provide also a
-[Java version](https://github.com/Azure/PROJECT-NAME-HERE-java)
-of this project and other Azure IoT PCS components.
 
 ## IDE
 
@@ -129,7 +108,7 @@ workstation, using the tools installed in your OS.
 
 If you use ReSharper or Rider, you can load the code style settings from
 the repository, stored in
-[project-name-here.sln.DotSettings](project-name-here.sln.DotSettings)
+[pcs-storage-adapter-dotnet.sln.DotSettings](pcs-storage-adapter-dotnet.sln.DotSettings)
 
 Some quick notes about the project code style:
 

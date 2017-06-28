@@ -12,6 +12,6 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1
         public const string Path = "v" + Number;
 
         /// <summary>Date when the API version has been published</summary>
-        public const string Date = "201705";
+        public const string Date = "201706";
     }
 }

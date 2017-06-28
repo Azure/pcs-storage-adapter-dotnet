@@ -27,9 +27,6 @@ IF %ERRORLEVEL% NEQ 0 GOTO FAIL
 docker run -it ^
     -p %PCS_STORAGEADAPTER_WEBSERVICE_PORT%:8080 ^
     -e "PCS_STORAGEADAPTER_WEBSERVICE_PORT=8080" ^
-    -e "PCS_IOTHUB_CONN_STRING=%PCS_IOTHUB_CONN_STRING%" ^
-    -e "PCS_IOTHUBMANAGER_WEBSERVICE_HOST=%PCS_IOTHUBMANAGER_WEBSERVICE_HOST%" ^
-    -e "PCS_IOTHUBMANAGER_WEBSERVICE_PORT=%PCS_IOTHUBMANAGER_WEBSERVICE_PORT%" ^
     -v %APP_HOME%\.cache\sandbox\.config:/root/.config ^
     -v %APP_HOME%\.cache\sandbox\.dotnet:/root/.dotnet ^
     -v %APP_HOME%\.cache\sandbox\.nuget:/root/.nuget ^

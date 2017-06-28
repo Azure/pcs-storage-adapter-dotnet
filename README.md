@@ -26,7 +26,7 @@ How to use it
 1. Add a new environment variable with name
    `PCS_STORAGEADAPTER_WEBSERVICE_PORT` and value `9001`.
 1. In the same section set the `App URL` to
-   `http://localhost:9001/v1/status`
+   `http://localhost:9024/v1/status`
 1. Save the settings and Run the WebService project, the web service status
    should appear in your browser, in JSON format.
 

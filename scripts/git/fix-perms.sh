@@ -22,7 +22,6 @@ chmod ugo+x ./scripts/docker/build
 chmod ugo+x ./scripts/docker/run
 chmod ugo+x ./scripts/docker/content/*.sh
 chmod ugo+x ./scripts/git/*.sh
-chmod ugo+x ./scripts/iothub/*.sh
 
 git update-index --chmod=+x ./scripts/build
 git update-index --chmod=+x ./scripts/build-in-sandbox
@@ -38,6 +37,5 @@ git update-index --chmod=+x ./scripts/docker/build
 git update-index --chmod=+x ./scripts/docker/run
 git update-index --chmod=+x ./scripts/docker/content/*.sh
 git update-index --chmod=+x ./scripts/git/*.sh
-git update-index --chmod=+x ./scripts/iothub/*.sh
 
 set +e
