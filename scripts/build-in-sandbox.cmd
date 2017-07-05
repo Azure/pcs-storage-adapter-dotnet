@@ -17,9 +17,7 @@ mkdir .cache\sandbox\.nuget > NUL 2>&1
 
 :: Start the sandbox and execute the build script
 docker run ^
-    -e "PCS_IOTHUBMANAGER_WEBSERVICE_HOST=127.0.0.1" ^
-    -e "PCS_IOTHUBMANAGER_WEBSERVICE_PORT=8080" ^
-    -e "PCS_IOTHUB_CONN_STRING=%PCS_IOTHUB_CONN_STRING%" ^
+    -e "PCS_STORAGEADAPTER_WEBSERVICE_PORT=%PCS_STORAGEADAPTER_WEBSERVICE_PORT%" ^
     -v %APP_HOME%\.cache\sandbox\.config:/root/.config ^
     -v %APP_HOME%\.cache\sandbox\.dotnet:/root/.dotnet ^
     -v %APP_HOME%\.cache\sandbox\.nuget:/root/.nuget ^

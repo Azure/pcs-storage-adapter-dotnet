@@ -38,21 +38,12 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Models
         [JsonProperty(PropertyName = "Properties", Order = 70)]
         public Dictionary<string, string> Properties => new Dictionary<string, string>
         {
-            { "Foo", "Bar" },
-            { "Simulation", "on" },
-            { "Region", "US" },
-            { "DebugMode", "off" }
         };
 
         /// <summary>A property bag with details about the internal dependencies</summary>
         [JsonProperty(PropertyName = "Dependencies", Order = 80)]
         public Dictionary<string, string> Dependencies => new Dictionary<string, string>
         {
-            { "IoTHubManagerAPI", "OK:...msg..." },
-            { "StorageAPI", "OK:timeout after 3 secs" },
-            { "AuthAPI", "ERROR:certificate expired" },
-            { "IoTHub", "OK:...msg..." },
-            { "AAD", "ERROR:certificate expired" }
         };
 
         [JsonProperty(PropertyName = "$metadata", Order = 1000)]
