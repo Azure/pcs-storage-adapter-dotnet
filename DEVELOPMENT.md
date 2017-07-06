@@ -97,6 +97,10 @@ and ensure that your IDE works as expected.
 
 * [.NET Core](https://dotnet.github.io)
 
+We provide also a
+[Java version](https://github.com/Azure/pcs-storage-adapter-java)
+of this project and other Azure IoT PCS components.
+
 ## IDE
 
 Here are some IDE that you can use to work on Azure IoT PCS:
