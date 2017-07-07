@@ -18,7 +18,8 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
     /// <summary>Web service configuration</summary>
     public class Config : IConfig
     {
-        private const string Application = "StorageAdapter:";
+        private const string ApplicationKey = "StorageAdapter:";
+        private const string PortKey = ApplicationKey + "webservice_port";
 
         /// <summary>Web service listening port</summary>
         public int Port { get; }
@@ -28,7 +29,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
 
         public Config(IConfigData configData)
         {
-            this.Port = configData.GetInt(Application + "webservice_port");
+            this.Port = configData.GetInt(PortKey);
 
             this.ServicesConfig = new ServicesConfig
             {
