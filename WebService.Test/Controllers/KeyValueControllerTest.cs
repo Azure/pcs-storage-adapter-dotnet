@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+﻿// Copyright (c) Microsoft. All rights reserved.
+
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics;
+using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Models;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Controllers;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Exceptions;
+using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Wrappers;
 using Moq;
-using Newtonsoft.Json.Linq;
 using WebService.Test.helpers;
 using Xunit;
 
@@ -14,170 +17,295 @@ namespace WebService.Test.Controllers
 {
     public class KeyValueControllerTest
     {
-        private Mock<IKeyValueContainer> keyValueContainerMock;
-        private KeyValueController keyValueController;
+        private Mock<IKeyValueContainer> mockContainer;
+        private Mock<IKeyGenerator> mockGenerator;
+        private KeysController controller;
+        private Random rand = new Random();
 
         public KeyValueControllerTest()
         {
-            keyValueContainerMock = new Mock<IKeyValueContainer>();
+            mockContainer = new Mock<IKeyValueContainer>();
+            mockGenerator = new Mock<IKeyGenerator>();
 
-            keyValueController = new KeyValueController(
-                keyValueContainerMock.Object,
+            controller = new KeysController(
+                mockContainer.Object,
+                mockGenerator.Object,
                 new Logger("UnitTest", LogLevel.Debug));
         }
 
         [Fact, Trait(Constants.Type, Constants.UnitTest)]
-        public async Task SetItemTest()
+        public async Task GetTest()
         {
-            var input = TableColumnSerializer.Deserialize("{ 'a': { 'Value': 0 } }") as JObject;
+            var collectionId = rand.NextString();
+            var key = rand.NextString();
+            var data = rand.NextString();
+            var etag = rand.NextString();
+            var timestamp = rand.NextDateTime();
 
-            var intermedia = new Dictionary<string, object>
+            var model = new DataServiceModel
             {
-                { "a", new { Value = 0 } }
+                CollectionId = collectionId,
+                Key = key,
+                Data = data,
+                ETag = etag,
+                Timestamp = timestamp
             };
 
-            keyValueContainerMock
-                .Setup(x => x.SetAsync(It.IsAny<IEnumerable<KeyValuePair<string, object>>>()))
-                .ReturnsAsync(intermedia);
+            mockContainer
+                .Setup(x => x.GetAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>()))
+                .ReturnsAsync(model);
 
-            var result = await keyValueController.SetItemAsync("a", new { Value = 0 });
+            var result = await controller.Get(collectionId, key);
 
-            keyValueContainerMock
-                .Verify(x => x.SetAsync(It.Is<IEnumerable<KeyValuePair<string, object>>>(pairs => VerifyPairs(pairs, intermedia))), Times.Once);
+            Assert.Equal(result.Key, key);
+            Assert.Equal(result.Data, data);
+            Assert.Equal(result.ETag, etag);
+            Assert.Equal(result.metadata["$type"], "Key;1");
+            Assert.Equal(result.metadata["$modified"], timestamp.ToString());
+            Assert.Equal(result.metadata["$uri"], $"/v1/collections/{collectionId}/keys/{key}");
 
-            Assert.Equal(
-                TableColumnSerializer.Serialize(input),
-                TableColumnSerializer.Serialize(result));
+            mockContainer
+                .Verify(x => x.GetAsync(
+                    It.Is<string>(s => s == collectionId),
+                    It.Is<string>(s => s == key)),
+                    Times.Once);
         }
 
         [Fact, Trait(Constants.Type, Constants.UnitTest)]
-        public async Task SetItemMultipleKeysTest()
+        public async Task GetAllTest()
+        {
+            var collectionId = rand.NextString();
+
+            var models = new DataServiceModel[]
+            {
+                new DataServiceModel
+                {
+                    CollectionId = collectionId,
+                    Key = rand.NextString(),
+                    Data = rand.NextString(),
+                    ETag = rand.NextString(),
+                    Timestamp = rand.NextDateTime()
+                },
+                new DataServiceModel
+                {
+                    CollectionId = collectionId,
+                    Key = rand.NextString(),
+                    Data = rand.NextString(),
+                    ETag = rand.NextString(),
+                    Timestamp = rand.NextDateTime()
+                },
+                new DataServiceModel
+                {
+                    CollectionId = collectionId,
+                    Key = rand.NextString(),
+                    Data = rand.NextString(),
+                    ETag = rand.NextString(),
+                    Timestamp = rand.NextDateTime()
+                }
+            };
+
+            mockContainer
+                .Setup(x => x.GetAllAsync(
+                    It.IsAny<string>()))
+                .ReturnsAsync(models);
+
+            var result = await controller.Get(collectionId);
+
+            Assert.Equal(result.Items.Count(), models.Length);
+            foreach (var item in result.Items)
+            {
+                var model = models.Single(m => m.Key == item.Key);
+                Assert.Equal(item.Data, model.Data);
+                Assert.Equal(item.ETag, model.ETag);
+                Assert.Equal(item.metadata["$type"], "Key;1");
+                Assert.Equal(item.metadata["$modified"], model.Timestamp.ToString());
+                Assert.Equal(item.metadata["$uri"], $"/v1/collections/{collectionId}/keys/{model.Key}");
+            }
+            Assert.Equal(result.metadata["$type"], "KeyList;1");
+            Assert.Equal(result.metadata["$uri"], $"/v1/collections/{collectionId}/keys");
+
+            mockContainer
+                .Verify(x => x.GetAllAsync(
+                    It.Is<string>(s => s == collectionId)));
+        }
+
+        [Fact, Trait(Constants.Type, Constants.UnitTest)]
+        public async Task PostTest()
+        {
+            var collectionId = rand.NextString();
+            var key = Guid.NewGuid().ToString();
+            var data = rand.NextString();
+            var etag = rand.NextString();
+            var timestamp = rand.NextDateTime();
+
+            var modelIn = new DataServiceModel
+            {
+                Data = data
+            };
+
+            var modelOut = new DataServiceModel
+            {
+                CollectionId = collectionId,
+                Key = key,
+                Data = data,
+                ETag = etag,
+                Timestamp = timestamp
+            };
+
+            mockGenerator
+                .Setup(x => x.Generate())
+                .Returns(key);
+
+            mockContainer
+                .Setup(x => x.CreateAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DataServiceModel>()))
+                .ReturnsAsync(modelOut);
+
+            var result = await controller.Post(collectionId, modelIn);
+
+            Assert.Equal(result.Key, key);
+            Assert.Equal(result.Data, data);
+            Assert.Equal(result.ETag, etag);
+            Assert.Equal(result.metadata["$type"], "Key;1");
+            Assert.Equal(result.metadata["$modified"], modelOut.Timestamp.ToString());
+            Assert.Equal(result.metadata["$uri"], $"/v1/collections/{collectionId}/keys/{key}");
+
+            mockContainer
+                .Verify(x => x.CreateAsync(
+                    It.Is<string>(s => s == collectionId),
+                    It.Is<string>(s => s == key),
+                    It.Is<DataServiceModel>(m => m.Equals(modelIn))));
+        }
+
+        [Fact, Trait(Constants.Type, Constants.UnitTest)]
+        public async Task PutNewTest()
+        {
+            var collectionId = rand.NextString();
+            var key = rand.NextString();
+            var data = rand.NextString();
+            var etag = rand.NextString();
+            var timestamp = rand.NextDateTime();
+
+            var modelIn = new DataServiceModel
+            {
+                Data = data
+            };
+
+            var modelOut = new DataServiceModel
+            {
+                CollectionId = collectionId,
+                Key = key,
+                Data = data,
+                ETag = etag,
+                Timestamp = timestamp
+            };
+
+            mockContainer
+                .Setup(x => x.CreateAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DataServiceModel>()))
+                .ReturnsAsync(modelOut);
+
+            var result = await controller.Put(collectionId, key, modelIn);
+
+            Assert.Equal(result.Key, key);
+            Assert.Equal(result.Data, data);
+            Assert.Equal(result.ETag, etag);
+            Assert.Equal(result.metadata["$type"], "Key;1");
+            Assert.Equal(result.metadata["$modified"], modelOut.Timestamp.ToString());
+            Assert.Equal(result.metadata["$uri"], $"/v1/collections/{collectionId}/keys/{key}");
+
+            mockContainer
+                .Verify(x => x.CreateAsync(
+                    It.Is<string>(s => s == collectionId),
+                    It.Is<string>(s => s == key),
+                    It.Is<DataServiceModel>(m => m.Equals(modelIn))),
+                    Times.Once);
+        }
+
+        [Fact, Trait(Constants.Type, Constants.UnitTest)]
+        public async Task PutUpdateTest()
+        {
+            var collectionId = rand.NextString();
+            var key = rand.NextString();
+            var data = rand.NextString();
+            var etagOld = rand.NextString();
+            var etagNew = rand.NextString();
+            var timestamp = rand.NextDateTime();
+
+            var modelIn = new DataServiceModel
+            {
+                Data = data,
+                ETag = etagOld
+            };
+
+            var modelOut = new DataServiceModel
+            {
+                CollectionId = collectionId,
+                Key = key,
+                Data = data,
+                ETag = etagNew,
+                Timestamp = timestamp
+            };
+
+            mockContainer
+                .Setup(x => x.UpsertAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DataServiceModel>()))
+                .ReturnsAsync(modelOut);
+
+            var result = await controller.Put(collectionId, key, modelIn);
+
+            Assert.Equal(result.Key, key);
+            Assert.Equal(result.Data, data);
+            Assert.Equal(result.ETag, etagNew);
+            Assert.Equal(result.metadata["$type"], "Key;1");
+            Assert.Equal(result.metadata["$modified"], modelOut.Timestamp.ToString());
+            Assert.Equal(result.metadata["$uri"], $"/v1/collections/{collectionId}/keys/{key}");
+
+            mockContainer
+                .Verify(x => x.UpsertAsync(
+                    It.Is<string>(s => s == collectionId),
+                    It.Is<string>(s => s == key),
+                    It.Is<DataServiceModel>(m => m.Equals(modelIn))),
+                    Times.Once);
+        }
+
+        [Fact, Trait(Constants.Type, Constants.UnitTest)]
+        public async Task DeleteTest()
+        {
+            var collectionId = rand.NextString();
+            var key = rand.NextString();
+
+            mockContainer
+                .Setup(x => x.DeleteAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>()))
+                .Returns(Task.FromResult(0));
+
+            await controller.Delete(collectionId, key);
+
+            mockContainer
+                .Verify(x => x.DeleteAsync(
+                    It.Is<string>(s => s == collectionId),
+                    It.Is<string>(s => s == key)),
+                    Times.Once);
+        }
+
+        [Fact, Trait(Constants.Type, Constants.UnitTest)]
+        public async Task ValidateKeyTest()
         {
             await Assert.ThrowsAsync<BadRequestException>(async () =>
-                await keyValueController.SetItemAsync("a,b", null));
-        }
+                await controller.Delete("collection", "*"));
 
-        [Fact, Trait(Constants.Type, Constants.UnitTest)]
-        public async Task SetItemsTest()
-        {
-            var input = TableColumnSerializer.Deserialize("{ 'a': { 'Value': 0 }, 'b': null, 'c': { 'String': 'Text' } }") as JObject;
-
-            var intermedia = new Dictionary<string, object>
-            {
-                { "a", new { Value = 0 } },
-                { "b", null },
-                { "c", new { String = "Text" } }
-            };
-
-            keyValueContainerMock
-                .Setup(x => x.SetAsync(It.IsAny<IEnumerable<KeyValuePair<string, object>>>()))
-                .ReturnsAsync(intermedia);
-
-            var result = await keyValueController.SetItemsAsync(input);
-
-            keyValueContainerMock
-                .Verify(x => x.SetAsync(It.Is<IEnumerable<KeyValuePair<string, object>>>(pairs => VerifyPairs(pairs, intermedia))), Times.Once);
-
-            Assert.Equal(
-                TableColumnSerializer.Serialize(input),
-                TableColumnSerializer.Serialize(result));
-        }
-
-        [Fact, Trait(Constants.Type, Constants.UnitTest)]
-        public async Task GetItemsSingleKeyTest()
-        {
-            var intermedia = new Dictionary<string, object>
-            {
-                { "a", new { Value = 0} }
-            };
-
-            var output = new
-            {
-                a = new { Value = 0 }
-            };
-
-            keyValueContainerMock
-                .Setup(x => x.GetAsync(It.IsAny<IEnumerable<string>>()))
-                .ReturnsAsync(intermedia);
-
-            var result = await keyValueController.GetItemsAsync("a");
-
-            keyValueContainerMock
-                .Verify(x => x.GetAsync(It.Is<IEnumerable<string>>(keys => keys.Single() == "a")));
-
-            Assert.Equal(
-                TableColumnSerializer.Serialize(result),
-                TableColumnSerializer.Serialize(output));
-        }
-
-        [Fact, Trait(Constants.Type, Constants.UnitTest)]
-        public async Task GetItemsEmptyKeyTest()
-        {
-            var result = (await keyValueController.GetItemsAsync(string.Empty));
-            Assert.Equal(TableColumnSerializer.Serialize(result), TableColumnSerializer.Serialize(new object()));
-
-            result = (await keyValueController.GetItemsAsync(null));
-            Assert.Equal(TableColumnSerializer.Serialize(result), TableColumnSerializer.Serialize(new object()));
-
-            result = (await keyValueController.GetItemsAsync(" , ,,"));
-            Assert.Equal(TableColumnSerializer.Serialize(result), TableColumnSerializer.Serialize(new object()));
-        }
-
-        [Fact, Trait(Constants.Type, Constants.UnitTest)]
-        public async Task GetItemsMultipleKeysTest()
-        {
-            var intermedia = new Dictionary<string, object>
-            {
-                { "a", new { Value = 0} },
-                { "b", null },
-                { "c", new { String = "Text" } }
-            };
-
-            var output = TableColumnSerializer.Deserialize("{ 'a': { 'Value': 0 }, 'b': null, 'c': { 'String': 'Text' } }") as JObject;
-
-            keyValueContainerMock
-                .Setup(x => x.GetAsync(It.IsAny<IEnumerable<string>>()))
-                .ReturnsAsync(intermedia);
-
-            var result = await keyValueController.GetItemsAsync("a,b,c");
-
-            keyValueContainerMock
-                .Verify(x => x.GetAsync(It.Is<IEnumerable<string>>(keys => string.Join(",", keys) == "a,b,c")));
-
-            Assert.Equal(
-                TableColumnSerializer.Serialize(result),
-                TableColumnSerializer.Serialize(output));
-        }
-
-        [Fact, Trait(Constants.Type, Constants.UnitTest)]
-        public async Task DeleteItemsTest()
-        {
-            var intermedia = new Dictionary<string, object>
-            {
-                { "a", new { Value = 0} },
-                { "b", null },
-                { "c", new { String = "Text" } }
-            };
-
-            var output = TableColumnSerializer.Deserialize("{ 'a': { 'Value': 0 }, 'b': null, 'c': { 'String': 'Text' } }") as JObject;
-
-            keyValueContainerMock
-                .Setup(x => x.DeleteAsync(It.IsAny<IEnumerable<string>>()))
-                .ReturnsAsync(intermedia);
-
-            var result = await keyValueController.DeleteItemsAsync("a,b,c");
-
-            keyValueContainerMock
-                .Verify(x => x.DeleteAsync(It.Is<IEnumerable<string>>(keys => string.Join(",", keys) == "a,b,c")));
-
-            Assert.Equal(
-                TableColumnSerializer.Serialize(result),
-                TableColumnSerializer.Serialize(output));
-        }
-
-        private bool VerifyPairs(IEnumerable<KeyValuePair<string, object>> a, IEnumerable<KeyValuePair<string, object>> b)
-        {
-            return TableColumnSerializer.Serialize(a.OrderBy(pair => pair.Key)) == TableColumnSerializer.Serialize(b.OrderBy(pair => pair.Key));
+            await Assert.ThrowsAsync<BadRequestException>(async () =>
+                await controller.Delete("collection", new string('a', 256)));
         }
     }
 }

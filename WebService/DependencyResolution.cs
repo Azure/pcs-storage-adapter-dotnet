@@ -3,11 +3,13 @@
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.Azure.Documents;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.StorageWrapper;
+using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Wrappers;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime;
+using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Wrappers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
@@ -63,8 +65,10 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
             // By default Autofac uses a request lifetime, creating new objects
             // for each request, which is good to reduce the risk of memory
             // leaks, but not so good for the overall performance.
-            builder.RegisterType<StorageTableKeyValueContainer>().As<IKeyValueContainer>().SingleInstance();
-            builder.RegisterType<AzureStorageTableWrapper>().As<IAzureStorageTableWrapper>();
+            builder.RegisterType<DocDBKeyValueContainer>().As<IKeyValueContainer>().SingleInstance();
+            builder.RegisterType<DocumentClientFactory>().As<IFactory<IDocumentClient>>().SingleInstance();
+            builder.RegisterType<DocumentClientExceptionChecker>().As<IExceptionChecker>().SingleInstance();
+            builder.RegisterType<GuidKeyGenerator>().As<IKeyGenerator>().SingleInstance();
         }
 
         private static void RegisterFactory(IContainer container)

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics;
+using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Exceptions;
+using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Models;
 
 /// <summary>
 /// Sample code showing implementation of IKeyValueContainer
@@ -14,7 +16,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
     {
         private readonly ILogger logger;
 
-        private readonly Dictionary<string, object> container = new Dictionary<string, object>();
+        private readonly Dictionary<string, DataServiceModel> container = new Dictionary<string, DataServiceModel>();
 
         public InMemoryKeyValueContainer(
             ILogger logger)
@@ -22,31 +24,67 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             this.logger = logger;
         }
 
-        public async Task<IEnumerable<KeyValuePair<string, object>>> SetAsync(IEnumerable<KeyValuePair<string, object>> pairs)
+        public async Task<DataServiceModel> GetAsync(string collectionId, string key)
         {
-            foreach (var pair in pairs)
+            var id = KeyValueDocument.GenerateId(collectionId, key);
+
+            DataServiceModel model;
+            if (!container.TryGetValue(id, out model))
             {
-                container[pair.Key] = pair.Value;
+                throw new ResourceNotFoundException();
             }
 
-            return await Task.FromResult(pairs);
+            return await Task.FromResult(model);
         }
 
-        public async Task<IEnumerable<KeyValuePair<string, object>>> GetAsync(IEnumerable<string> keys)
+        public async Task<IEnumerable<DataServiceModel>> GetAllAsync(string collectionId)
         {
-            return await Task.FromResult(container.Where(pair => keys.Contains(pair.Key)));
+            return await Task.FromResult(container
+                .Where(pair => pair.Key.StartsWith($"{collectionId}."))
+                .Select(pair => pair.Value));
         }
 
-        public async Task<IEnumerable<KeyValuePair<string, object>>> DeleteAsync(IEnumerable<string> keys)
+        public async Task<DataServiceModel> CreateAsync(string collectionId, string key, DataServiceModel input)
         {
-            var outputs = container.Where(pair => keys.Contains(pair.Key));
+            var id = KeyValueDocument.GenerateId(collectionId, key);
 
-            foreach (var key in keys)
+            if (container.ContainsKey(id))
             {
-                container.Remove(key);
+                throw new ConflictingResourceException();
             }
 
-            return await Task.FromResult(outputs);
+            var model = new DataServiceModel(collectionId, key, input.Data);
+            container.Add(id, model);
+            return await Task.FromResult(model);
+        }
+
+        public async Task<DataServiceModel> UpsertAsync(string collectionId, string key, DataServiceModel input)
+        {
+            var id = KeyValueDocument.GenerateId(collectionId, key);
+
+            DataServiceModel oldModel;
+            if (!container.TryGetValue(id, out oldModel))
+            {
+                return await CreateAsync(collectionId, key, input);
+            }
+
+            if (input.ETag != "*" && input.ETag != oldModel.ETag)
+            {
+                throw new ConflictingResourceException();
+            }
+
+            var newModel = new DataServiceModel(collectionId, key, input.Data);
+            container[id] = newModel;
+            return await Task.FromResult(newModel);
+        }
+
+        public async Task DeleteAsync(string collectionId, string key)
+        {
+            var id = KeyValueDocument.GenerateId(collectionId, key);
+
+            container.Remove(id);
+
+            await Task.FromResult(0);
         }
     }
 }

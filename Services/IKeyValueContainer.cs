@@ -2,33 +2,54 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Models;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
 {
     /// <summary>
-    /// Common interface for underlying key-value storage services, such as Azure Storage Table, Cosmos DB and so on
+    /// Common interface for underlying key-value storage services, such as Cosmos DB, Azure Storage Table and so on
     /// </summary>
     public interface IKeyValueContainer
     {
         /// <summary>
-        /// Add/Update key-value pairs
+        /// Get single key-value pair
         /// </summary>
-        /// <param name="pairs">Key-value pairs to be added or updated</param>
-        /// <returns>Pairs were successfully added or updated. Failed pairs will not be included</returns>
-        Task<IEnumerable<KeyValuePair<string, object>>> SetAsync(IEnumerable<KeyValuePair<string, object>> pairs);
+        /// <param name="collectionId">Collection ID</param>
+        /// <param name="key">Key</param>
+        /// <returns>Key-value pair including key, data, etag and timestamp</returns>
+        Task<DataServiceModel> GetAsync(string collectionId, string key);
 
         /// <summary>
-        /// Retrieve key-value pairs
+        /// Get all key-value pairs in given collection
         /// </summary>
-        /// <param name="keys">Retrieving keys</param>
-        /// <returns>Successfully retrieved pairs. Keys were not found will not be included</returns>
-        Task<IEnumerable<KeyValuePair<string, object>>> GetAsync(IEnumerable<string> keys);
+        /// <param name="collectionId">Collection ID</param>
+        /// <returns>List of key-value pairs</returns>
+        Task<IEnumerable<DataServiceModel>> GetAllAsync(string collectionId);
 
         /// <summary>
-        /// Remove key-value pairs
+        /// Create key-value pair
         /// </summary>
-        /// <param name="keys">Deleting keys</param>
-        /// <returns>Pairs were successfully removed. Failed pairs will not be included</returns>
-        Task<IEnumerable<KeyValuePair<string, object>>> DeleteAsync(IEnumerable<string> keys);
+        /// <param name="collectionId">Collection ID</param>
+        /// <param name="key">Key</param>
+        /// <param name="input">Data</param>
+        /// <returns>Created key-value pair</returns>
+        Task<DataServiceModel> CreateAsync(string collectionId, string key, DataServiceModel input);
+
+        /// <summary>
+        /// Update key-value pair (create if pair does not exist)
+        /// </summary>
+        /// <param name="collectionId">Collection ID</param>
+        /// <param name="key">Key</param>
+        /// <param name="input">Data plus etag</param>
+        /// <returns>Updated key-value pair</returns>
+        Task<DataServiceModel> UpsertAsync(string collectionId, string key, DataServiceModel input);
+
+        /// <summary>
+        /// Delete key-value pair
+        /// </summary>
+        /// <param name="collectionId">Collection ID</param>
+        /// <param name="key">Key</param>
+        /// <returns></returns>
+        Task DeleteAsync(string collectionId, string key);
     }
 }
