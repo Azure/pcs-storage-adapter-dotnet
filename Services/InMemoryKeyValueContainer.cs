@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -53,7 +54,14 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
                 throw new ConflictingResourceException();
             }
 
-            var model = new DataServiceModel(collectionId, key, input.Data);
+            var model = new DataServiceModel
+            {
+                CollectionId = collectionId,
+                Key = key,
+                Data = input.Data,
+                ETag = Guid.NewGuid().ToString(),
+                Timestamp = DateTime.UtcNow
+            };
             container.Add(id, model);
             return await Task.FromResult(model);
         }
@@ -73,7 +81,14 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
                 throw new ConflictingResourceException();
             }
 
-            var newModel = new DataServiceModel(collectionId, key, input.Data);
+            var newModel = new DataServiceModel
+            {
+                CollectionId = collectionId,
+                Key = key,
+                Data = input.Data,
+                ETag = Guid.NewGuid().ToString(),
+                Timestamp = DateTime.UtcNow
+            };
             container[id] = newModel;
             return await Task.FromResult(newModel);
         }

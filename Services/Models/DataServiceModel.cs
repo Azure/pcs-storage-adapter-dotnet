@@ -37,14 +37,5 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Models
             ETag = document.ETag;
             Timestamp = document.Timestamp;
         }
-
-        public DataServiceModel(string collectionId, string key, string data)
-        {
-            CollectionId = collectionId;
-            Key = key;
-            Data = data;
-            ETag = Guid.NewGuid().ToString();
-            Timestamp = DateTime.UtcNow;
-        }
     }
 }

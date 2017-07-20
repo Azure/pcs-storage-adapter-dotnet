@@ -170,6 +170,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
         {
             if (etag == "*")
             {
+                // Match all
                 return null;
             }
 
