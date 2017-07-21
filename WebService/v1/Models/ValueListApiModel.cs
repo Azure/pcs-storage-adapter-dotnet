@@ -7,16 +7,16 @@ using Newtonsoft.Json;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Models
 {
-    public class DataListApiModel
+    public class ValueListApiModel
     {
-        public IEnumerable<DataApiModel> Items;
+        public IEnumerable<ValueApiModel> Items;
 
         [JsonProperty("$metadata")]
         public Dictionary<string, string> Metadata;
 
-        public DataListApiModel(IEnumerable<DataServiceModel> models, string collectionId)
+        public ValueListApiModel(IEnumerable<ValueServiceModel> models, string collectionId)
         {
-            Items = models.Select(m => new DataApiModel(m));
+            Items = models.Select(m => new ValueApiModel(m));
 
             Metadata = new Dictionary<string, string>
             {

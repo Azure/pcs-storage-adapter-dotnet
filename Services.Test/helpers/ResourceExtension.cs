@@ -12,9 +12,9 @@ namespace Services.Test.helpers
             resource.SetPropertyValue("_etag", etag);
         }
 
-        public static void SetTimestamp(this Resource resource, DateTime timestamp)
+        public static void SetTimestamp(this Resource resource, DateTimeOffset timestamp)
         {
-            resource.SetPropertyValue("_ts", new DateTimeOffset(timestamp).ToUnixTimeSeconds());
+            resource.SetPropertyValue("_ts", timestamp.ToUnixTimeSeconds());
         }
     }
 }

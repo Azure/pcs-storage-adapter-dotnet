@@ -20,7 +20,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Wrappers
             var match = Regex.Match(config.ConnectionString, "^AccountEndpoint=(?<endpoint>.*);AccountKey=(?<key>.*);$");
             if (!match.Success)
             {
-                var message = $"Invalid connection string for Cosmos DB: {config.ConnectionString}";
+                var message = "Invalid connection string for Cosmos DB";
                 logger.Error(message, () => { });
                 throw new InvalidConfigurationException(message);
             }

@@ -6,19 +6,19 @@ using Microsoft.Azure.Documents.Client;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Models
 {
-    public class DataServiceModel
+    public class ValueServiceModel
     {
         public string CollectionId { get; set; }
         public string Key { get; set; }
         public string Data { get; set; }
         public string ETag { get; set; }
-        public DateTime Timestamp { get; set; }
+        public DateTimeOffset Timestamp { get; set; }
 
-        public DataServiceModel()
+        public ValueServiceModel()
         {
         }
 
-        public DataServiceModel(ResourceResponse<Document> response)
+        public ValueServiceModel(ResourceResponse<Document> response)
         {
             var resource = response.Resource;
 
@@ -29,7 +29,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Models
             Timestamp = resource.Timestamp;
         }
 
-        public DataServiceModel(KeyValueDocument document)
+        internal ValueServiceModel(KeyValueDocument document)
         {
             CollectionId = document.CollectionId;
             Key = document.Key;

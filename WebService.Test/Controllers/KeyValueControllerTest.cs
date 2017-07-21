@@ -20,7 +20,7 @@ namespace WebService.Test.Controllers
     {
         private readonly Mock<IKeyValueContainer> mockContainer;
         private readonly Mock<IKeyGenerator> mockGenerator;
-        private readonly KeysController controller;
+        private readonly ValuesController controller;
         private readonly Random rand = new Random();
 
         public KeyValueControllerTest()
@@ -28,7 +28,7 @@ namespace WebService.Test.Controllers
             mockContainer = new Mock<IKeyValueContainer>();
             mockGenerator = new Mock<IKeyGenerator>();
 
-            controller = new KeysController(
+            controller = new ValuesController(
                 mockContainer.Object,
                 mockGenerator.Object,
                 new Logger("UnitTest", LogLevel.Debug));
@@ -41,9 +41,9 @@ namespace WebService.Test.Controllers
             var key = rand.NextString();
             var data = rand.NextString();
             var etag = rand.NextString();
-            var timestamp = rand.NextDateTime();
+            var timestamp = rand.NextDateTimeOffset();
 
-            var model = new DataServiceModel
+            var model = new ValueServiceModel
             {
                 CollectionId = collectionId,
                 Key = key,
@@ -81,29 +81,29 @@ namespace WebService.Test.Controllers
 
             var models = new[]
             {
-                new DataServiceModel
+                new ValueServiceModel
                 {
                     CollectionId = collectionId,
                     Key = rand.NextString(),
                     Data = rand.NextString(),
                     ETag = rand.NextString(),
-                    Timestamp = rand.NextDateTime()
+                    Timestamp = rand.NextDateTimeOffset()
                 },
-                new DataServiceModel
+                new ValueServiceModel
                 {
                     CollectionId = collectionId,
                     Key = rand.NextString(),
                     Data = rand.NextString(),
                     ETag = rand.NextString(),
-                    Timestamp = rand.NextDateTime()
+                    Timestamp = rand.NextDateTimeOffset()
                 },
-                new DataServiceModel
+                new ValueServiceModel
                 {
                     CollectionId = collectionId,
                     Key = rand.NextString(),
                     Data = rand.NextString(),
                     ETag = rand.NextString(),
-                    Timestamp = rand.NextDateTime()
+                    Timestamp = rand.NextDateTimeOffset()
                 }
             };
 
@@ -139,14 +139,14 @@ namespace WebService.Test.Controllers
             var key = Guid.NewGuid().ToString();
             var data = rand.NextString();
             var etag = rand.NextString();
-            var timestamp = rand.NextDateTime();
+            var timestamp = rand.NextDateTimeOffset();
 
-            var modelIn = new DataServiceModel
+            var modelIn = new ValueServiceModel
             {
                 Data = data
             };
 
-            var modelOut = new DataServiceModel
+            var modelOut = new ValueServiceModel
             {
                 CollectionId = collectionId,
                 Key = key,
@@ -163,7 +163,7 @@ namespace WebService.Test.Controllers
                 .Setup(x => x.CreateAsync(
                     It.IsAny<string>(),
                     It.IsAny<string>(),
-                    It.IsAny<DataServiceModel>()))
+                    It.IsAny<ValueServiceModel>()))
                 .ReturnsAsync(modelOut);
 
             var result = await controller.Post(collectionId, modelIn);
@@ -179,7 +179,7 @@ namespace WebService.Test.Controllers
                 .Verify(x => x.CreateAsync(
                     It.Is<string>(s => s == collectionId),
                     It.Is<string>(s => s == key),
-                    It.Is<DataServiceModel>(m => m.Equals(modelIn))));
+                    It.Is<ValueServiceModel>(m => m.Equals(modelIn))));
         }
 
         [Fact, Trait(Constants.Type, Constants.UnitTest)]
@@ -189,14 +189,14 @@ namespace WebService.Test.Controllers
             var key = rand.NextString();
             var data = rand.NextString();
             var etag = rand.NextString();
-            var timestamp = rand.NextDateTime();
+            var timestamp = rand.NextDateTimeOffset();
 
-            var modelIn = new DataServiceModel
+            var modelIn = new ValueServiceModel
             {
                 Data = data
             };
 
-            var modelOut = new DataServiceModel
+            var modelOut = new ValueServiceModel
             {
                 CollectionId = collectionId,
                 Key = key,
@@ -209,7 +209,7 @@ namespace WebService.Test.Controllers
                 .Setup(x => x.CreateAsync(
                     It.IsAny<string>(),
                     It.IsAny<string>(),
-                    It.IsAny<DataServiceModel>()))
+                    It.IsAny<ValueServiceModel>()))
                 .ReturnsAsync(modelOut);
 
             var result = await controller.Put(collectionId, key, modelIn);
@@ -225,7 +225,7 @@ namespace WebService.Test.Controllers
                 .Verify(x => x.CreateAsync(
                     It.Is<string>(s => s == collectionId),
                     It.Is<string>(s => s == key),
-                    It.Is<DataServiceModel>(m => m.Equals(modelIn))),
+                    It.Is<ValueServiceModel>(m => m.Equals(modelIn))),
                     Times.Once);
         }
 
@@ -237,15 +237,15 @@ namespace WebService.Test.Controllers
             var data = rand.NextString();
             var etagOld = rand.NextString();
             var etagNew = rand.NextString();
-            var timestamp = rand.NextDateTime();
+            var timestamp = rand.NextDateTimeOffset();
 
-            var modelIn = new DataServiceModel
+            var modelIn = new ValueServiceModel
             {
                 Data = data,
                 ETag = etagOld
             };
 
-            var modelOut = new DataServiceModel
+            var modelOut = new ValueServiceModel
             {
                 CollectionId = collectionId,
                 Key = key,
@@ -258,7 +258,7 @@ namespace WebService.Test.Controllers
                 .Setup(x => x.UpsertAsync(
                     It.IsAny<string>(),
                     It.IsAny<string>(),
-                    It.IsAny<DataServiceModel>()))
+                    It.IsAny<ValueServiceModel>()))
                 .ReturnsAsync(modelOut);
 
             var result = await controller.Put(collectionId, key, modelIn);
@@ -274,7 +274,7 @@ namespace WebService.Test.Controllers
                 .Verify(x => x.UpsertAsync(
                     It.Is<string>(s => s == collectionId),
                     It.Is<string>(s => s == key),
-                    It.Is<DataServiceModel>(m => m.Equals(modelIn))),
+                    It.Is<ValueServiceModel>(m => m.Equals(modelIn))),
                     Times.Once);
         }
 

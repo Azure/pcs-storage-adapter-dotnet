@@ -19,10 +19,10 @@ namespace Services.Test.helpers
             return builder.ToString();
         }
 
-        public static DateTime NextDateTime(this Random rand)
+        public static DateTimeOffset NextDateTimeOffset(this Random rand)
         {
-            var min = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            var max = new DateTime(2021, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var min = new DateTimeOffset(2000, 1, 1, 0, 0, 0, TimeSpan.Zero);
+            var max = new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
             return min + TimeSpan.FromSeconds(rand.Next(0, (int)(max - min).TotalSeconds));
         }

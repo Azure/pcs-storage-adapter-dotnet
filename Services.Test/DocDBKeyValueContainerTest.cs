@@ -44,7 +44,7 @@ namespace Services.Test
             var key = rand.NextString();
             var data = rand.NextString();
             var etag = rand.NextString();
-            var timestamp = rand.NextDateTime();
+            var timestamp = rand.NextDateTimeOffset();
 
             var document = new Document();
             document.SetPropertyValue("CollectionId", collectionId);
@@ -104,7 +104,7 @@ namespace Services.Test
             foreach (var doc in documents)
             {
                 doc.SetETag(rand.NextString());
-                doc.SetTimestamp(rand.NextDateTime());
+                doc.SetTimestamp(rand.NextDateTimeOffset());
             }
 
             mockClient
@@ -139,7 +139,7 @@ namespace Services.Test
             var key = rand.NextString();
             var data = rand.NextString();
             var etag = rand.NextString();
-            var timestamp = rand.NextDateTime();
+            var timestamp = rand.NextDateTimeOffset();
 
             var document = new Document();
             document.SetPropertyValue("CollectionId", collectionId);
@@ -157,7 +157,7 @@ namespace Services.Test
                     It.IsAny<bool>()))
                 .ReturnsAsync(response);
 
-            var result = await container.CreateAsync(collectionId, key, new DataServiceModel
+            var result = await container.CreateAsync(collectionId, key, new ValueServiceModel
             {
                 Data = data
             });
@@ -193,7 +193,7 @@ namespace Services.Test
                 .ThrowsAsync(new ConflictingResourceException());
 
             await Assert.ThrowsAsync<ConflictingResourceException>(async () =>
-               await container.CreateAsync(collectionId, key, new DataServiceModel
+               await container.CreateAsync(collectionId, key, new ValueServiceModel
                {
                    Data = data
                }));
@@ -207,7 +207,7 @@ namespace Services.Test
             var data = rand.NextString();
             var etagOld = rand.NextString();
             var etagNew = rand.NextString();
-            var timestamp = rand.NextDateTime();
+            var timestamp = rand.NextDateTimeOffset();
 
             var document = new Document();
             document.SetPropertyValue("CollectionId", collectionId);
@@ -225,7 +225,7 @@ namespace Services.Test
                     It.IsAny<bool>()))
                 .ReturnsAsync(response);
 
-            var result = await container.UpsertAsync(collectionId, key, new DataServiceModel
+            var result = await container.UpsertAsync(collectionId, key, new ValueServiceModel
             {
                 Data = data,
                 ETag = etagOld
@@ -263,7 +263,7 @@ namespace Services.Test
                 .ThrowsAsync(new ConflictingResourceException());
 
             await Assert.ThrowsAsync<ConflictingResourceException>(async () =>
-                await container.UpsertAsync(collectionId, key, new DataServiceModel
+                await container.UpsertAsync(collectionId, key, new ValueServiceModel
                 {
                     Data = data,
                     ETag = etag

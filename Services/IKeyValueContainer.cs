@@ -17,14 +17,14 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
         /// <param name="collectionId">Collection ID</param>
         /// <param name="key">Key</param>
         /// <returns>Key-value pair including key, data, etag and timestamp</returns>
-        Task<DataServiceModel> GetAsync(string collectionId, string key);
+        Task<ValueServiceModel> GetAsync(string collectionId, string key);
 
         /// <summary>
         /// Get all key-value pairs in given collection
         /// </summary>
         /// <param name="collectionId">Collection ID</param>
         /// <returns>List of key-value pairs</returns>
-        Task<IEnumerable<DataServiceModel>> GetAllAsync(string collectionId);
+        Task<IEnumerable<ValueServiceModel>> GetAllAsync(string collectionId);
 
         /// <summary>
         /// Create key-value pair
@@ -33,7 +33,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
         /// <param name="key">Key</param>
         /// <param name="input">Data</param>
         /// <returns>Created key-value pair</returns>
-        Task<DataServiceModel> CreateAsync(string collectionId, string key, DataServiceModel input);
+        Task<ValueServiceModel> CreateAsync(string collectionId, string key, ValueServiceModel input);
 
         /// <summary>
         /// Update key-value pair (create if pair does not exist)
@@ -42,7 +42,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
         /// <param name="key">Key</param>
         /// <param name="input">Data plus etag</param>
         /// <returns>Updated key-value pair</returns>
-        Task<DataServiceModel> UpsertAsync(string collectionId, string key, DataServiceModel input);
+        Task<ValueServiceModel> UpsertAsync(string collectionId, string key, ValueServiceModel input);
 
         /// <summary>
         /// Delete key-value pair

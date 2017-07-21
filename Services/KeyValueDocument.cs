@@ -1,10 +1,14 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using System.Runtime.CompilerServices;
 using Microsoft.Azure.Documents;
+using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Helpers;
+
+[assembly: InternalsVisibleTo("Services.Test")]
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
 {
-    public sealed class KeyValueDocument : Resource
+    internal sealed class KeyValueDocument : Resource
     {
         public string CollectionId { get; set; }
         public string Key { get; set; }
@@ -12,15 +16,10 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
 
         public KeyValueDocument(string collectionId, string key, string data)
         {
-            Id = GenerateId(collectionId, key);
+            Id = DocumentIdHelper.GenerateId(collectionId, key);
             CollectionId = collectionId;
             Key = key;
             Data = data;
-        }
-
-        public static string GenerateId(string collectionId, string key)
-        {
-            return $"{collectionId}.{key}";
         }
     }
 }
