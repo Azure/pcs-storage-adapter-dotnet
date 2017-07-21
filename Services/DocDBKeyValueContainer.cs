@@ -15,9 +15,9 @@ using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Wrappers;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
 {
-    public class DocDBKeyValueContainer : IKeyValueContainer
+    public class DocDBKeyValueContainer : IKeyValueContainer, IDisposable
     {
-        private readonly IFactory<IDocumentClient> clientFactory;
+        private readonly IDocumentClient client;
         private readonly IExceptionChecker exceptionChecker;
         private readonly string collectionLink;
         private readonly ILogger logger;
@@ -27,7 +27,9 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             IServicesConfig config,
             ILogger logger)
         {
-            this.clientFactory = clientFactory;
+            this.disposedValue = false;
+
+            this.client = clientFactory.Create();
             this.exceptionChecker = exceptionChecker;
             this.collectionLink = config.ContainerName;
             this.logger = logger;
@@ -35,8 +37,6 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
 
         public async Task<ValueServiceModel> GetAsync(string collectionId, string key)
         {
-            var client = clientFactory.Create();
-
             try
             {
                 var response = await client.ReadDocumentAsync($"{collectionLink}/docs/{DocumentIdHelper.GenerateId(collectionId, key)}");
@@ -55,34 +55,19 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
                     throw;
                 }
             }
-            finally
-            {
-                (client as IDisposable)?.Dispose();
-            }
         }
 
         public async Task<IEnumerable<ValueServiceModel>> GetAllAsync(string collectionId)
         {
-            var client = clientFactory.Create();
+            var query = client.CreateDocumentQuery<KeyValueDocument>(collectionLink)
+                .Where(doc => doc.CollectionId == collectionId)
+                .ToList();
 
-            try
-            {
-                var query = client.CreateDocumentQuery<KeyValueDocument>(collectionLink)
-                    .Where(doc => doc.CollectionId == collectionId)
-                    .ToList();
-
-                return await Task.FromResult(query.Select(doc => new ValueServiceModel(doc)));
-            }
-            finally
-            {
-                (client as IDisposable)?.Dispose();
-            }
+            return await Task.FromResult(query.Select(doc => new ValueServiceModel(doc)));
         }
 
         public async Task<ValueServiceModel> CreateAsync(string collectionId, string key, ValueServiceModel input)
         {
-            var client = clientFactory.Create();
-
             try
             {
                 var response = await client.CreateDocumentAsync(
@@ -104,16 +89,10 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
                     throw;
                 }
             }
-            finally
-            {
-                (client as IDisposable)?.Dispose();
-            }
         }
 
         public async Task<ValueServiceModel> UpsertAsync(string collectionId, string key, ValueServiceModel input)
         {
-            var client = clientFactory.Create();
-
             try
             {
                 var response = await client.UpsertDocumentAsync(
@@ -136,16 +115,10 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
                     throw;
                 }
             }
-            finally
-            {
-                (client as IDisposable)?.Dispose();
-            }
         }
 
         public async Task DeleteAsync(string collectionId, string key)
         {
-            var client = clientFactory.Create();
-
             try
             {
                 await client.DeleteDocumentAsync($"{collectionLink}/docs/{DocumentIdHelper.GenerateId(collectionId, key)}");
@@ -160,10 +133,6 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
                 {
                     throw;
                 }
-            }
-            finally
-            {
-                (client as IDisposable)?.Dispose();
             }
         }
 
@@ -184,5 +153,27 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
                 }
             };
         }
+
+        #region IDisposable Support
+        private bool disposedValue;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    (client as IDisposable)?.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
     }
 }
