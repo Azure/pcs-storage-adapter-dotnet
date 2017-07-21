@@ -12,13 +12,13 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Models
         public IEnumerable<DataApiModel> Items;
 
         [JsonProperty("$metadata")]
-        public Dictionary<string, string> metadata;
+        public Dictionary<string, string> Metadata;
 
         public DataListApiModel(IEnumerable<DataServiceModel> models, string collectionId)
         {
             Items = models.Select(m => new DataApiModel(m));
 
-            metadata = new Dictionary<string, string>
+            Metadata = new Dictionary<string, string>
             {
                 { "$type", $"KeyList;{Version.Number}" },
                 { "$uri", $"/{Version.Path}/collections/{collectionId}/keys" }

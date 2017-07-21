@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
+using System.Globalization;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Models;
 using Newtonsoft.Json;
 
@@ -18,7 +19,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Models
         public string ETag { get; set; }
 
         [JsonProperty("$metadata")]
-        public Dictionary<string, string> metadata;
+        public Dictionary<string, string> Metadata;
 
         public DataApiModel(DataServiceModel model)
         {
@@ -26,10 +27,10 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Models
             Data = model.Data;
             ETag = model.ETag;
 
-            metadata = new Dictionary<string, string>
+            Metadata = new Dictionary<string, string>
             {
                 { "$type", $"Key;{Version.Number}" },
-                { "$modified", model.Timestamp.ToString() },
+                { "$modified", model.Timestamp.ToString(CultureInfo.InvariantCulture) },
                 { "$uri", $"/{Version.Path}/collections/{model.CollectionId}/keys/{model.Key}" }
             };
         }

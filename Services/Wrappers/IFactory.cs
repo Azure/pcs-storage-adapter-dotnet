@@ -7,7 +7,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Wrappers
     /// Mock support
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IFactory<T>
+    public interface IFactory<out T>
     {
         T Create();
     }

@@ -7,7 +7,7 @@ namespace Services.Test.helpers
 {
     public class MockFactory<T> : IFactory<T> where T : class
     {
-        private Mock<T> mock;
+        private readonly Mock<T> mock;
 
         public MockFactory(Mock<T> mock)
         {

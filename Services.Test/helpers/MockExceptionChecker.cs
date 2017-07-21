@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Exceptions;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Wrappers;
 

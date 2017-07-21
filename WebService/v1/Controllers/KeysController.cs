@@ -16,9 +16,9 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Controllers
     [Route(Version.Path), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class KeysController : Controller
     {
-        private IKeyValueContainer container;
-        private IKeyGenerator generator;
-        private ILogger logger;
+        private readonly IKeyValueContainer container;
+        private readonly IKeyGenerator generator;
+        private readonly ILogger logger;
 
         public KeysController(
             IKeyValueContainer container,

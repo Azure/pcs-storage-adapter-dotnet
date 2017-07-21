@@ -15,8 +15,6 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Wrappers
         private readonly Uri docDbEndpoint;
         private readonly string docDbKey;
 
-        public string CollectionLink { get; private set; }
-
         public DocumentClientFactory(IServicesConfig config, ILogger logger)
         {
             var match = Regex.Match(config.ConnectionString, "^AccountEndpoint=(?<endpoint>.*);AccountKey=(?<key>.*);$");

@@ -19,9 +19,9 @@ namespace Services.Test
     public class DocDBKeyValueContainerTest
     {
         private static string mockCollectionLink = "mockCollectionLink";
-        private Mock<IDocumentClient> mockClient;
-        private DocDBKeyValueContainer container;
-        private Random rand = new Random();
+        private readonly Mock<IDocumentClient> mockClient;
+        private readonly DocDBKeyValueContainer container;
+        private readonly Random rand = new Random();
 
         public DocDBKeyValueContainerTest()
         {
@@ -95,7 +95,7 @@ namespace Services.Test
         public async Task GetAllAsyncTest()
         {
             var collectionId = rand.NextString();
-            var documents = new KeyValueDocument[]
+            var documents = new[]
             {
                 new KeyValueDocument(collectionId, rand.NextString(), rand.NextString()),
                 new KeyValueDocument(collectionId, rand.NextString(), rand.NextString()),
@@ -113,7 +113,7 @@ namespace Services.Test
                     It.IsAny<FeedOptions>()))
                 .Returns(documents.AsQueryable().OrderBy(doc => doc.Id));
 
-            var result = await container.GetAllAsync(collectionId);
+            var result = (await container.GetAllAsync(collectionId)).ToList();
 
             Assert.Equal(result.Count(), documents.Length);
             foreach (var model in result)

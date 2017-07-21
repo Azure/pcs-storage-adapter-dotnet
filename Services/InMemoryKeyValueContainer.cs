@@ -8,11 +8,11 @@ using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Exceptions;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Models;
 
-/// <summary>
-/// Sample code showing implementation of IKeyValueContainer
-/// </summary>
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
 {
+    /// <summary>
+    /// Sample code showing implementation of IKeyValueContainer
+    /// </summary>
     public class InMemoryKeyValueContainer : IKeyValueContainer
     {
         private readonly ILogger logger;
@@ -32,6 +32,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             DataServiceModel model;
             if (!container.TryGetValue(id, out model))
             {
+                logger.Error($"Key '{key}' does not exist", () => { });
                 throw new ResourceNotFoundException();
             }
 
@@ -51,6 +52,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
 
             if (container.ContainsKey(id))
             {
+                logger.Error($"Key '{key}' already exists", () => { });
                 throw new ConflictingResourceException();
             }
 
@@ -78,6 +80,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
 
             if (input.ETag != "*" && input.ETag != oldModel.ETag)
             {
+                logger.Error($"Key '{key}' does not match '{oldModel.ETag}'", () => { });
                 throw new ConflictingResourceException();
             }
 

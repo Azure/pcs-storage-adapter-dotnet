@@ -4,7 +4,7 @@ using Microsoft.Azure.Documents;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
 {
-    public class KeyValueDocument : Resource
+    public sealed class KeyValueDocument : Resource
     {
         public string CollectionId { get; set; }
         public string Key { get; set; }

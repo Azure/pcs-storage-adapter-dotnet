@@ -45,7 +45,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             {
                 if (exceptionChecker.IsNotFoundException(ex))
                 {
-                    var message = $"The resource requested doesn't exist.";
+                    var message = "The resource requested doesn't exist.";
                     logger.Error(message, () => { });
                     throw new ResourceNotFoundException(message);
                 }
@@ -94,7 +94,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             {
                 if (exceptionChecker.IsConflictException(ex))
                 {
-                    var message = $"There is already a key with the Id specified.";
+                    var message = "There is already a key with the Id specified.";
                     logger.Error(message, () => { });
                     throw new ConflictingResourceException(message);
                 }
@@ -126,7 +126,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             {
                 if (exceptionChecker.IsPreconditionFailedException(ex))
                 {
-                    var message = $"ETag mismatch: the resource has been updated by another client.";
+                    var message = "ETag mismatch: the resource has been updated by another client.";
                     logger.Error(message, () => { });
                     throw new ConflictingResourceException(message);
                 }
