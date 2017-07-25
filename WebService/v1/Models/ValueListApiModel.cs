@@ -20,7 +20,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Models
 
             Metadata = new Dictionary<string, string>
             {
-                { "$type", $"KeyList;{Version.Number}" },
+                { "$type", $"ValueList;{Version.Number}" },
                 { "$uri", $"/{Version.Path}/collections/{collectionId}/keys" }
             };
         }
