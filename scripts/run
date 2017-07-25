@@ -49,6 +49,8 @@ run_in_sandbox() {
         docker run -it \
             -p $PCS_STORAGEADAPTER_WEBSERVICE_PORT:$PCS_STORAGEADAPTER_WEBSERVICE_PORT \
             -e "PCS_STORAGEADAPTER_WEBSERVICE_PORT=$PCS_STORAGEADAPTER_WEBSERVICE_PORT" \
+            -e "PCS_STORAGEADAPTER_CONTAINER_NAME=$PCS_STORAGEADAPTER_CONTAINER_NAME" \
+            -e "PCS_STORAGE_CONNECTION_STRING=$PCS_STORAGE_CONNECTION_STRING" \
             -v "$PCS_CACHE/sandbox/.config:/root/.config" \
             -v "$PCS_CACHE/sandbox/.dotnet:/root/.dotnet" \
             -v "$PCS_CACHE/sandbox/.nuget:/root/.nuget" \
