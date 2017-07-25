@@ -31,7 +31,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Models
             {
                 { "$type", $"Value;{Version.Number}" },
                 { "$modified", model.Timestamp.ToString(CultureInfo.InvariantCulture) },
-                { "$uri", $"/{Version.Path}/collections/{model.CollectionId}/keys/{model.Key}" }
+                { "$uri", $"/{Version.Path}/collections/{model.CollectionId}/values/{model.Key}" }
             };
         }
     }
