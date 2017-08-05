@@ -23,6 +23,10 @@ IF "%1"=="--in-sandbox" GOTO :RunInSandbox
     dotnet --version > NUL 2>&1
     IF %ERRORLEVEL% NEQ 0 GOTO MISSING_DOTNET
 
+    :: Check settings
+    call .\scripts\env-vars-check.cmd
+    IF %ERRORLEVEL% NEQ 0 GOTO FAIL
+
     :: Restore nuget packages and compile the application
     echo Downloading dependencies...
     call dotnet restore
@@ -56,9 +60,11 @@ IF "%1"=="--in-sandbox" GOTO :RunInSandbox
     mkdir %PCS_CACHE%\sandbox\.config > NUL 2>&1
     mkdir %PCS_CACHE%\sandbox\.dotnet > NUL 2>&1
     mkdir %PCS_CACHE%\sandbox\.nuget > NUL 2>&1
+    echo Note: caching build files in %PCS_CACHE%
 
     :: Start the sandbox and execute the build script
     docker run ^
+        -e PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING=%PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING% ^
         -v %PCS_CACHE%\sandbox\.config:/root/.config ^
         -v %PCS_CACHE%\sandbox\.dotnet:/root/.dotnet ^
         -v %PCS_CACHE%\sandbox\.nuget:/root/.nuget ^

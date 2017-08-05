@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Exceptions;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Exceptions;
-using Microsoft.Extensions.DependencyModel;
 using Newtonsoft.Json;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Filters

@@ -3,7 +3,6 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using Newtonsoft.Json;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics
 {
@@ -20,7 +19,6 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics
         // The following 4 methods allow to log a message, capturing the context
         // (i.e. the method where the log message is generated)
         void Debug(string message, Action context);
-
         void Info(string message, Action context);
         void Warn(string message, Action context);
         void Error(string message, Action context);
@@ -28,7 +26,6 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics
         // The following 4 methods allow to log a message and some data,
         // capturing the context (i.e. the method where the log message is generated)
         void Debug(string message, Func<object> context);
-
         void Info(string message, Func<object> context);
         void Warn(string message, Func<object> context);
         void Error(string message, Func<object> context);
@@ -38,15 +35,6 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics
     {
         private readonly string processId;
         private readonly LogLevel loggingLevel;
-
-        // Save memory avoiding serializations that go too deep
-        private static readonly JsonSerializerSettings serializationSettings =
-            new JsonSerializerSettings
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-                MaxDepth = 4
-            };
 
         public Logger(string processId, LogLevel loggingLevel)
         {
@@ -87,7 +75,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics
             if (this.loggingLevel > LogLevel.Debug) return;
 
             if (!string.IsNullOrEmpty(message)) message += ", ";
-            message += Serialize(context.Invoke());
+            message += Serialization.Serialize(context.Invoke());
 
             this.Write("DEBUG", context.GetMethodInfo(), message);
         }
@@ -97,7 +85,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics
             if (this.loggingLevel > LogLevel.Info) return;
 
             if (!string.IsNullOrEmpty(message)) message += ", ";
-            message += Serialize(context.Invoke());
+            message += Serialization.Serialize(context.Invoke());
 
             this.Write("INFO", context.GetMethodInfo(), message);
         }
@@ -107,7 +95,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics
             if (this.loggingLevel > LogLevel.Warn) return;
 
             if (!string.IsNullOrEmpty(message)) message += ", ";
-            message += Serialize(context.Invoke());
+            message += Serialization.Serialize(context.Invoke());
 
             this.Write("WARN", context.GetMethodInfo(), message);
         }
@@ -117,14 +105,9 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics
             if (this.loggingLevel > LogLevel.Error) return;
 
             if (!string.IsNullOrEmpty(message)) message += ", ";
-            message += Serialize(context.Invoke());
+            message += Serialization.Serialize(context.Invoke());
 
             this.Write("ERROR", context.GetMethodInfo(), message);
-        }
-
-        private static string Serialize(object o)
-        {
-            return JsonConvert.SerializeObject(o, serializationSettings);
         }
 
         /// <summary>

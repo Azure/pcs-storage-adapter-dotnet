@@ -16,23 +16,30 @@ using Xunit;
 
 namespace Services.Test
 {
-    public class DocDBKeyValueContainerTest
+    public class DocumentDbKeyValueContainerTest
     {
-        private static string mockCollectionLink = "mockCollectionLink";
+        private const string MockDbId = "mockdb";
+        private const string MockCollId = "mockcoll";
+        private static readonly string mockCollectionLink = $"/dbs/{MockDbId}/colls/{MockCollId}";
+
         private readonly Mock<IDocumentClient> mockClient;
-        private readonly DocDBKeyValueContainer container;
+        private readonly DocumentDbKeyValueContainer container;
         private readonly Random rand = new Random();
 
-        public DocDBKeyValueContainerTest()
+        public DocumentDbKeyValueContainerTest()
         {
             mockClient = new Mock<IDocumentClient>();
 
-            container = new DocDBKeyValueContainer(
+            container = new DocumentDbKeyValueContainer(
                 new MockFactory<IDocumentClient>(mockClient),
                 new MockExceptionChecker(),
                 new ServicesConfig
                 {
-                    ContainerName = mockCollectionLink
+                    StorageType = "documentDb",
+                    DocumentDbConnString = "",
+                    DocumentDbDatabase = MockDbId,
+                    DocumentDbCollection = MockCollId,
+                    DocumentDbRUs = 567
                 },
                 new Logger("UnitTest", LogLevel.Debug));
         }

@@ -23,11 +23,11 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Models
 
         public ValueApiModel(ValueServiceModel model)
         {
-            Key = model.Key;
-            Data = model.Data;
-            ETag = model.ETag;
+            this.Key = model.Key;
+            this.Data = model.Data;
+            this.ETag = model.ETag;
 
-            Metadata = new Dictionary<string, string>
+            this.Metadata = new Dictionary<string, string>
             {
                 { "$type", $"Value;{Version.Number}" },
                 { "$modified", model.Timestamp.ToString(CultureInfo.InvariantCulture) },

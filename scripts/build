@@ -21,6 +21,8 @@ compile() {
     check_dependency_dotnet
 
     cd $APP_HOME
+    ./scripts/env-vars-check
+
     header "Downloading dependencies..."
     dotnet restore
 
@@ -44,6 +46,7 @@ setup_sandbox_cache() {
     mkdir -p $PCS_CACHE/sandbox/.config
     mkdir -p $PCS_CACHE/sandbox/.dotnet
     mkdir -p $PCS_CACHE/sandbox/.nuget
+    echo "Note: caching .NET files in $PCS_CACHE"
 }
 
 build_in_sandbox() {
@@ -51,8 +54,6 @@ build_in_sandbox() {
     setup_sandbox_cache
 
     cd $APP_HOME
-
-    echo "Note: caching .NET files in $PCS_CACHE"
 
     # On Windows this script should use docker.exe, in which case
     # the parameters syntax is different, e.g. volumes path
@@ -65,6 +66,7 @@ build_in_sandbox() {
     if [[ -z "$IS_WINDOWS" ]]; then
         check_dependency_docker
         docker run \
+            -e "PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING=$PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING" \
             -v "$PCS_CACHE/sandbox/.config:/root/.config" \
             -v "$PCS_CACHE/sandbox/.dotnet:/root/.dotnet" \
             -v "$PCS_CACHE/sandbox/.nuget:/root/.nuget" \

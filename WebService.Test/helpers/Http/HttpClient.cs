@@ -159,7 +159,7 @@ namespace WebService.Test.helpers.Http
 
             this.log.WriteLine("### RESPONSE ##############################");
             this.log.WriteLine("# Status code: " + response.StatusCode);
-            this.log.WriteLine("# Headers:\n" + response.Headers.ToString());
+            this.log.WriteLine("# Headers:\n" + response.Headers);
             this.log.WriteLine("# Content:");
 
             try

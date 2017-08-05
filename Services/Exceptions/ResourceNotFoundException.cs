@@ -10,7 +10,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Exceptions
     /// </summary>
     public class ResourceNotFoundException : Exception
     {
-        public ResourceNotFoundException() : base()
+        public ResourceNotFoundException()
         {
         }
 

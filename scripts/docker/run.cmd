@@ -23,9 +23,7 @@ IF %ERRORLEVEL% NEQ 0 GOTO FAIL
 :: Some settings are used to connect to an external dependency, e.g. Azure IoT Hub and IoT Hub Manager API
 :: Depending on which settings and which dependencies are needed, edit the list of variables
 echo Starting StorageAdapter ...
-docker run -it -p %PCS_STORAGEADAPTER_WEBSERVICE_PORT%:%PCS_STORAGEADAPTER_WEBSERVICE_PORT% ^
-    -e PCS_STORAGEADAPTER_WEBSERVICE_PORT=%PCS_STORAGEADAPTER_WEBSERVICE_PORT% ^
-    -e PCS_STORAGEADAPTER_CONTAINER_NAME=%PCS_STORAGEADAPTER_CONTAINER_NAME% ^
+docker run -it -p 9022:9022 ^
     -e PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING=%PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING% ^
     %DOCKER_IMAGE%:%APP_VERSION%
 

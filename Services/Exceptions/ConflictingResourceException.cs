@@ -12,7 +12,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Exceptions
     /// </summary>
     public class ConflictingResourceException : Exception
     {
-        public ConflictingResourceException() : base()
+        public ConflictingResourceException()
         {
         }
 

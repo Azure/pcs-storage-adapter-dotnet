@@ -11,7 +11,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Exceptions
     /// </summary>
     public class ResourceOutOfDateException : Exception
     {
-        public ResourceOutOfDateException() : base()
+        public ResourceOutOfDateException()
         {
         }
 

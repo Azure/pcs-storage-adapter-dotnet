@@ -11,7 +11,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Exceptions
     /// </summary>
     public class InvalidConfigurationException : Exception
     {
-        public InvalidConfigurationException() : base()
+        public InvalidConfigurationException()
         {
         }
 

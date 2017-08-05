@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics;
+using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Exceptions;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Helpers;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Models;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Exceptions;
@@ -54,6 +55,11 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Controllers
         [HttpPost("collections/{collectionId}/values")]
         public async Task<ValueApiModel> Post(string collectionId, [FromBody]ValueServiceModel model)
         {
+            if (model == null)
+            {
+                throw new InvalidInputException("The request is empty");
+            }
+
             string key = keyGenerator.Generate();
             EnsureValidId(collectionId, key);
 
@@ -65,6 +71,11 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Controllers
         [HttpPut("collections/{collectionId}/values/{key}")]
         public async Task<ValueApiModel> Put(string collectionId, string key, [FromBody]ValueServiceModel model)
         {
+            if (model == null)
+            {
+                throw new InvalidInputException("The request is empty");
+            }
+
             EnsureValidId(collectionId, key);
 
             var result = model.ETag == null ?
