@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
@@ -33,6 +34,40 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             this.exceptionChecker = exceptionChecker;
             this.collectionLink = config.ContainerName;
             this.logger = logger;
+        }
+
+        public async Task InitializeAsync()
+        {
+            var regex = new Regex("dbs/(?<databaseId>.*)/colls/(?<collectionId>.*)");
+            var match = regex.Match(collectionLink);
+            if (!match.Success)
+            {
+                var message = "Invalid collection URL";
+                logger.Info(message, () => new { collectionLink });
+                throw new InvalidConfigurationException(message);
+            }
+
+            var databaseId = match.Groups["databaseId"].Value;
+            var collectionId = match.Groups["collectionId"].Value;
+            var databaseUri = UriFactory.CreateDatabaseUri(databaseId);
+            var documentCollectionUri = UriFactory.CreateDocumentCollectionUri(databaseId, collectionId);
+
+            if (await client.DocumentCollectionExistsAsync(documentCollectionUri, exceptionChecker.IsNotFoundException))
+            {
+                return;
+            }
+
+            if (!await client.DatabaseExistsAsync(databaseUri, exceptionChecker.IsNotFoundException))
+            {
+                await client.CreateDatabaseAsync(new Database { Id = databaseId });
+            }
+
+            await client.CreateDocumentCollectionAsync(
+                databaseUri,
+                new DocumentCollection
+                {
+                    Id = collectionId
+                });
         }
 
         public async Task<ValueServiceModel> GetAsync(string collectionId, string key)

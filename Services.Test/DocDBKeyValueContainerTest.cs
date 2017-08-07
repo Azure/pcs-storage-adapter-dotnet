@@ -18,7 +18,10 @@ namespace Services.Test
 {
     public class DocDBKeyValueContainerTest
     {
-        private static string mockCollectionLink = "mockCollectionLink";
+        private const string MockDatabaseId = "mockDB";
+        private const string MockCollectionId = "mockCollection";
+
+        private readonly string mockCollectionLink = $"dbs/{MockDatabaseId}/colls/{MockCollectionId}";
         private readonly Mock<IDocumentClient> mockClient;
         private readonly DocDBKeyValueContainer container;
         private readonly Random rand = new Random();
@@ -35,6 +38,116 @@ namespace Services.Test
                     ContainerName = mockCollectionLink
                 },
                 new Logger("UnitTest", LogLevel.Debug));
+        }
+
+        [Fact, Trait(Constants.Type, Constants.UnitTest)]
+        public async Task InitializeAsyncCreateAllTest()
+        {
+            mockClient
+                .Setup(x => x.ReadDatabaseAsync(
+                    It.IsAny<Uri>(),
+                    It.IsAny<RequestOptions>()))
+                .ThrowsAsync(new ResourceNotFoundException());
+
+            mockClient
+                .Setup(x => x.ReadDocumentCollectionAsync(
+                    It.IsAny<Uri>(),
+                    It.IsAny<RequestOptions>()))
+                .ThrowsAsync(new ResourceNotFoundException());
+
+            mockClient
+                .Setup(x => x.CreateDatabaseAsync(
+                    It.IsAny<Database>(),
+                    It.IsAny<RequestOptions>()))
+                .ReturnsAsync(new ResourceResponse<Database>());
+
+            mockClient
+                .Setup(x => x.CreateDocumentCollectionAsync(
+                    It.IsAny<Uri>(),
+                    It.IsAny<DocumentCollection>(),
+                    It.IsAny<RequestOptions>()))
+                .ReturnsAsync(new ResourceResponse<DocumentCollection>());
+
+            await container.InitializeAsync();
+
+            mockClient.Verify(x => x.ReadDatabaseAsync(
+                It.Is<Uri>(u => u == UriFactory.CreateDatabaseUri(MockDatabaseId)),
+                It.IsAny<RequestOptions>()),
+                Times.Once);
+
+            mockClient.Verify(x => x.ReadDocumentCollectionAsync(
+                It.Is<Uri>(u => u == UriFactory.CreateDocumentCollectionUri(MockDatabaseId, MockCollectionId)),
+                It.IsAny<RequestOptions>()),
+                Times.Once);
+
+            mockClient.Verify(x => x.CreateDatabaseAsync(
+                It.Is<Database>(d => d.Id == MockDatabaseId),
+                It.IsAny<RequestOptions>()),
+                Times.Once);
+
+            mockClient.Verify(x => x.CreateDocumentCollectionAsync(
+                It.Is<Uri>(u => u == UriFactory.CreateDatabaseUri(MockDatabaseId)),
+                It.Is<DocumentCollection>(d => d.Id == MockCollectionId),
+                It.IsAny<RequestOptions>()),
+                Times.Once);
+        }
+
+        [Fact, Trait(Constants.Type, Constants.UnitTest)]
+        public async Task InitializeAsyncCreateDocumentCollectionTest()
+        {
+            mockClient
+                .Setup(x => x.ReadDatabaseAsync(
+                    It.IsAny<Uri>(),
+                    It.IsAny<RequestOptions>()))
+                .ReturnsAsync(new ResourceResponse<Database>());
+
+            mockClient
+                .Setup(x => x.ReadDocumentCollectionAsync(
+                    It.IsAny<Uri>(),
+                    It.IsAny<RequestOptions>()))
+                .ThrowsAsync(new ResourceNotFoundException());
+
+            mockClient
+                .Setup(x => x.CreateDocumentCollectionAsync(
+                    It.IsAny<Uri>(),
+                    It.IsAny<DocumentCollection>(),
+                    It.IsAny<RequestOptions>()))
+                .ReturnsAsync(new ResourceResponse<DocumentCollection>());
+
+            await container.InitializeAsync();
+
+            mockClient.Verify(x => x.ReadDatabaseAsync(
+                    It.Is<Uri>(u => u == UriFactory.CreateDatabaseUri(MockDatabaseId)),
+                    It.IsAny<RequestOptions>()),
+                Times.Once);
+
+            mockClient.Verify(x => x.ReadDocumentCollectionAsync(
+                    It.Is<Uri>(u => u == UriFactory.CreateDocumentCollectionUri(MockDatabaseId, MockCollectionId)),
+                    It.IsAny<RequestOptions>()),
+                Times.Once);
+
+            mockClient.Verify(x => x.CreateDocumentCollectionAsync(
+                    It.Is<Uri>(u => u == UriFactory.CreateDatabaseUri(MockDatabaseId)),
+                    It.Is<DocumentCollection>(d => d.Id == MockCollectionId),
+                    It.IsAny<RequestOptions>()),
+                Times.Once);
+        }
+
+        [Fact, Trait(Constants.Type, Constants.UnitTest)]
+        public async Task InitializeAsyncCreateNoneTest()
+        {
+            mockClient
+                .Setup(x => x.ReadDocumentCollectionAsync(
+                    It.IsAny<Uri>(),
+                    It.IsAny<RequestOptions>()))
+                .ReturnsAsync(new ResourceResponse<DocumentCollection>());
+
+            await container.InitializeAsync();
+
+            mockClient.Verify(x => x.ReadDocumentCollectionAsync(
+                    It.Is<Uri>(u => u == UriFactory.CreateDocumentCollectionUri(MockDatabaseId, MockCollectionId)),
+                    It.IsAny<RequestOptions>()),
+                Times.Once);
         }
 
         [Fact, Trait(Constants.Type, Constants.UnitTest)]
