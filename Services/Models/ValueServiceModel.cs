@@ -20,22 +20,26 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Models
 
         public ValueServiceModel(ResourceResponse<Document> response)
         {
+            if (response == null) return;
+
             var resource = response.Resource;
 
-            CollectionId = resource.GetPropertyValue<string>("CollectionId");
-            Key = resource.GetPropertyValue<string>("Key");
-            Data = resource.GetPropertyValue<string>("Data");
-            ETag = resource.ETag;
-            Timestamp = resource.Timestamp;
+            this.CollectionId = resource.GetPropertyValue<string>("CollectionId");
+            this.Key = resource.GetPropertyValue<string>("Key");
+            this.Data = resource.GetPropertyValue<string>("Data");
+            this.ETag = resource.ETag;
+            this.Timestamp = resource.Timestamp;
         }
 
         internal ValueServiceModel(KeyValueDocument document)
         {
-            CollectionId = document.CollectionId;
-            Key = document.Key;
-            Data = document.Data;
-            ETag = document.ETag;
-            Timestamp = document.Timestamp;
+            if (document == null) return;
+
+            this.CollectionId = document.CollectionId;
+            this.Key = document.Key;
+            this.Data = document.Data;
+            this.ETag = document.ETag;
+            this.Timestamp = document.Timestamp;
         }
     }
 }

@@ -17,10 +17,22 @@ source "$APP_HOME/scripts/.functions.sh"
 # Use PCS_CACHE="$APP_HOME/.cache" to cache inside the project folder
 PCS_CACHE="/tmp/azure/iotpcs/.cache"
 
+run() {
+    check_dependency_dotnet
+    ./scripts/env-vars-check
+
+    cd $APP_HOME
+    dotnet restore --verbosity=quiet
+
+    echo "Starting Storage Adapter..."
+    dotnet run --configuration $CONFIGURATION --project WebService/*.csproj
+}
+
 setup_sandbox_cache() {
     mkdir -p $PCS_CACHE/sandbox/.config
     mkdir -p $PCS_CACHE/sandbox/.dotnet
     mkdir -p $PCS_CACHE/sandbox/.nuget
+    echo "Note: caching build files in $PCS_CACHE"
 }
 
 run_in_sandbox() {
@@ -47,9 +59,7 @@ run_in_sandbox() {
         # Depending on which settings and which dependencies are needed,
         # edit the list of variables.
         docker run -it \
-            -p $PCS_STORAGEADAPTER_WEBSERVICE_PORT:$PCS_STORAGEADAPTER_WEBSERVICE_PORT \
-            -e "PCS_STORAGEADAPTER_WEBSERVICE_PORT=$PCS_STORAGEADAPTER_WEBSERVICE_PORT" \
-            -e "PCS_STORAGEADAPTER_CONTAINER_NAME=$PCS_STORAGEADAPTER_CONTAINER_NAME" \
+            -p 9022:9022 \
             -e "PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING=$PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING" \
             -v "$PCS_CACHE/sandbox/.config:/root/.config" \
             -v "$PCS_CACHE/sandbox/.dotnet:/root/.dotnet" \
@@ -58,19 +68,9 @@ run_in_sandbox() {
             azureiotpcs/code-builder-dotnet:1.0-dotnetcore /opt/scripts/run
     else
         # Note 'winpty' is required to provide a TTY to Docker
+        echo "Launching cmd.exe /c winpty ..."
         cmd.exe /c "winpty .\scripts\run.cmd" --in-sandbox
     fi
-}
-
-run() {
-    check_dependency_dotnet
-    ./scripts/env-vars-check
-
-    cd $APP_HOME
-    dotnet restore --verbosity=quiet
-
-    echo "Starting StorageAdapter ..."
-    dotnet run --configuration $CONFIGURATION --project WebService/*.csproj
 }
 
 if [[ "$1" == "--in-sandbox" || "$1" == "-s" ]]; then

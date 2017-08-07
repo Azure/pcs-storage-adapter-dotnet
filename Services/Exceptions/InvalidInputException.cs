@@ -11,7 +11,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Exceptions
     /// </summary>
     public class InvalidInputException : Exception
     {
-        public InvalidInputException() : base()
+        public InvalidInputException()
         {
         }
 

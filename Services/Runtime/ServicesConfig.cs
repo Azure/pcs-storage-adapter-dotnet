@@ -4,13 +4,19 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
 {
     public interface IServicesConfig
     {
-        string DocDBConnString { get; set; }
-        string ContainerName { get; set; }
+        string StorageType { get; set; }
+        string DocumentDbConnString { get; set; }
+        string DocumentDbDatabase { get; set; }
+        string DocumentDbCollection { get; set; }
+        int DocumentDbRUs { get; set; }
     }
 
     public class ServicesConfig : IServicesConfig
     {
-        public string DocDBConnString { get; set; }
-        public string ContainerName { get; set; }
+        public string StorageType { get; set; }
+        public string DocumentDbConnString { get; set; }
+        public string DocumentDbDatabase { get; set; }
+        public string DocumentDbCollection { get; set; }
+        public int DocumentDbRUs { get; set; }
     }
 }
