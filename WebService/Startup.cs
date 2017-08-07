@@ -1,10 +1,13 @@
 // Copyright (c) Microsoft. All rights reserved.
 
 using System;
+using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Azure.IoTSolutions.StorageAdapter.Services;
+using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -57,6 +60,21 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
             // If you want to dispose of resources that have been resolved in the
             // application container, register for the "ApplicationStopped" event.
             appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
+
+            InitializeService().Wait();
+        }
+
+        private async Task InitializeService()
+        {
+            var config = this.ApplicationContainer.Resolve<IConfig>();
+            if (string.IsNullOrEmpty(config.ServicesConfig.DocDBConnString))
+            {
+                // Ignore initializing in case running integration test
+                return;
+            }
+
+            var container = this.ApplicationContainer.Resolve<IKeyValueContainer>();
+            await container.InitializeAsync();
         }
     }
 }

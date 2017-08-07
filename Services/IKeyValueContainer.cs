@@ -12,6 +12,12 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
     public interface IKeyValueContainer
     {
         /// <summary>
+        /// Initialize. Ensure underlying resource is ready
+        /// </summary>
+        /// <returns></returns>
+        Task InitializeAsync();
+
+        /// <summary>
         /// Get single key-value pair
         /// </summary>
         /// <param name="collectionId">Collection ID</param>
