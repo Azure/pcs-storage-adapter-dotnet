@@ -43,7 +43,7 @@ if you need help finding it.
 1. In Visual Studio, start the WebService project
 1. Using an HTTP client like [Postman](https://www.getpostman.com),
    use the
-   [RESTful API](https://github.com/Azure/device-simulation-dotnet/wiki/%5BAPI-Specifications%5D-Simulations#create-default-simulation)
+   [RESTful API](https://github.com/Azure/pcs-storage-adapter-dotnet/wiki/API-specs)
    to create a simulation.
 
 ## Running the service with IntelliJ Rider
@@ -62,7 +62,7 @@ if you need help finding it.
 ## Project Structure
 
 This microservice contains the following projects:
-* **WebService.csproj** - C# web service exposing REST interface for Simulation
+* **WebService.csproj** - C# web service exposing REST interface for storage
 functionality
 * **WebService.Test.csproj** - Unit tests for web services functionality
 * **Services.csproj** - C# assembly containining business logic for interacting 
@@ -140,7 +140,7 @@ Troubleshooting
 
 Feedback
 ========
-Please enter issues, bugs, or suggestions as GitHub Issues here: https://github.com/Azure/device-simulation-dotnet/issues.
+Please enter issues, bugs, or suggestions as GitHub Issues here: https://github.com/Azure/pcs-storage-adapter-dotnet/issues.
 
 [build-badge]: https://img.shields.io/travis/Azure/pcs-storage-adapter-dotnet.svg
 [build-url]: https://travis-ci.org/Azure/pcs-storage-adapter-dotnet
