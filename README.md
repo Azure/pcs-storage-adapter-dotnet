@@ -32,8 +32,6 @@ if you need help finding it.
    [RESTful API](https://github.com/Azure/pcs-storage-adapter-dotnet/wiki/API-specs#create-key-value-with-post-id-generated-by-the-service)
    to create a collection.
 
-Running the service in an IDE
-=============================
 ## Running the service with Visual Studio
 1. Install any edition of [Visual Studio 2017](https://www.visualstudio.com/downloads/). When installing check ".NET Core" workload. 	
     a. If you already have Visual Studio installed, then ensure you have [.NET Core Tools for Visual Studio 2017](https://www.microsoft.com/net/core#windowsvs2017) installed.
@@ -61,8 +59,7 @@ Running the service in an IDE
    with details such as the URL where the web service is running, plus
    the service logs.
 
-Project Structure
-=================
+## Project Structure
 
 This microservice contains the following projects:
 * **WebService.csproj** - C# web service exposing REST interface for Simulation
@@ -75,8 +72,8 @@ with Azure Cosmoze account with type DocumentDb
 and scripts for running the microservice from the command line
 
 
-Build and Run from the command line
-===================================
+## Build and Run from the command line
+
 The [scripts](scripts) folder contains scripts for many frequent tasks:
 
 * `build`: compile all the projects and run the tests.
@@ -84,8 +81,8 @@ The [scripts](scripts) folder contains scripts for many frequent tasks:
 * `run`: compile the projects and run the service. This will prompt for
   elevated privileges in Windows to run the web service.
 
-Updating the Docker image
-=========================
+## Updating the Docker image
+
 The `scripts` folder includes a [docker](scripts/docker) subfolder with the files
 required to package the service into a Docker image:
 
@@ -105,8 +102,8 @@ docker-compose up
 
 The Docker compose configuration requires the IoTHub and StorageAdapter web serviceURL environment variables, described previously.
 
-Configuration and Environment variables
-=======================================
+## Configuration and Environment variables
+
 The service configuration is stored using ASP.NET Core configuration
 adapters, in [appsettings.ini](WebService/appsettings.ini). The INI
 format allows to store values in a readable format, with comments.
