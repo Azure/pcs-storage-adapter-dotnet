@@ -17,7 +17,8 @@ Dependencies
 * [Azure Cosmos DB account](https://ms.portal.azure.com/#create/Microsoft.DocumentDB)
 * API type DocumentDB
 
-# How to use the microservice
+How to use the microservice
+===========================
 ## Quickstart - Running the service with Docker
 
 1. Install Docker Compose: https://docs.docker.com/compose/install
@@ -32,8 +33,9 @@ if you need help finding it.
    [RESTful API](https://github.com/Azure/pcs-storage-adapter-dotnet/wiki/API-specs#create-key-value-with-post-id-generated-by-the-service)
    to create a collection.
 
-## Running the service in an IDE
-### Running the service with Visual Studio
+Running the service in an IDE
+=============================
+## Running the service with Visual Studio
 1. Install any edition of [Visual Studio 2017](https://www.visualstudio.com/downloads/). When installing check ".NET Core" workload. 	
     a. If you already have Visual Studio installed, then ensure you have [.NET Core Tools for Visual Studio 2017](https://www.microsoft.com/net/core#windowsvs2017) installed.
 1.  Open the solution using the pcs-storage-adapter.sln file.
@@ -47,7 +49,7 @@ if you need help finding it.
    [RESTful API](https://github.com/Azure/device-simulation-dotnet/wiki/%5BAPI-Specifications%5D-Simulations#create-default-simulation)
    to create a simulation.
 
-### Running the service with IntelliJ Rider
+## Running the service with IntelliJ Rider
 1. Open the solution using the `pcs-storage-adapter.sln` file.
 1. When the solution is loaded, got to `Run -> Edit Configurations` and
    create a new `.NET Project` configuration.
@@ -60,7 +62,8 @@ if you need help finding it.
    with details such as the URL where the web service is running, plus
    the service logs.
 
-## Project Structure
+Project Structure
+=================
 
 This microservice contains the following projects:
 * **WebService.csproj** - C# web service exposing REST interface for Simulation
@@ -73,7 +76,8 @@ with Azure Cosmoze account with type DocumentDb
 and scripts for running the microservice from the command line
 
 
-## Build and Run from the command line
+Build and Run from the command line
+===================================
 The [scripts](scripts) folder contains scripts for many frequent tasks:
 
 * `build`: compile all the projects and run the tests.
@@ -81,8 +85,8 @@ The [scripts](scripts) folder contains scripts for many frequent tasks:
 * `run`: compile the projects and run the service. This will prompt for
   elevated privileges in Windows to run the web service.
 
-## Updating the Docker image
-
+Updating the Docker image
+=========================
 The `scripts` folder includes a [docker](scripts/docker) subfolder with the files
 required to package the service into a Docker image:
 
@@ -102,7 +106,8 @@ docker-compose up
 
 The Docker compose configuration requires the IoTHub and StorageAdapter web serviceURL environment variables, described previously.
 
-## Configuration and Environment variables
+Configuration and Environment variables
+=======================================
 The service configuration is stored using ASP.NET Core configuration
 adapters, in [appsettings.ini](WebService/appsettings.ini). The INI
 format allows to store values in a readable format, with comments.
@@ -130,12 +135,15 @@ the IDE, there are several ways to manage environment variables:
   IntelliJ IDEA 
   (https://www.jetbrains.com/help/idea/run-debug-configuration-application.html)
 
-# Contributing to the solution
+Contributing to the solution
+============================
 Please follow our [contribution guildelines](CONTRIBUTING.md).  We love PRs too.
 
-# Troubleshooting
+Troubleshooting
+===============
 
-# Feedback
+Feedback
+========
 Please enter issues, bugs, or suggestions as GitHub Issues here: https://github.com/Azure/device-simulation-dotnet/issues.
 
 [build-badge]: https://img.shields.io/travis/Azure/pcs-storage-adapter-dotnet.svg
