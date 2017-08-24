@@ -4,7 +4,7 @@
 
 Storage Adapter Overview
 ========================
-This service allows to manage sets of key-values, abstracting the storage service semantic and presenting a simple interface to store data of any format using [Azure Cosmos DB](https://azure.microsoft.com/en-us/services/cosmos-db/).
+This service allows management of of key-values, abstracting the storage service semantic and presenting a simple interface to store data of any format using [Azure Cosmos DB](https://azure.microsoft.com/en-us/services/cosmos-db/).
 
 Values are organized in collections, it is possible to work on individual values and to fetch entire collections. Complex data structures are serialized by the clients and managed as simple text payload.
 
