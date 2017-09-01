@@ -18,7 +18,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Models
         {
         }
 
-        public ValueServiceModel(ResourceResponse<Document> response)
+        public ValueServiceModel(IResourceResponse<Document> response)
         {
             if (response == null) return;
 

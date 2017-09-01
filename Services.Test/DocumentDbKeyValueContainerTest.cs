@@ -77,7 +77,7 @@ namespace Services.Test
 
             mockClient
                 .Verify(x => x.ReadDocumentAsync(
-                    It.Is<string>(s => s == $"{mockCollectionLink}/docs/{collectionId}.{key}"),
+                    It.Is<string>(s => s == $"{mockCollectionLink}/docs/{collectionId.ToLowerInvariant()}.{key.ToLowerInvariant()}"),
                     It.IsAny<RequestOptions>()),
                     Times.Once);
         }
@@ -178,7 +178,7 @@ namespace Services.Test
             mockClient
                 .Verify(x => x.CreateDocumentAsync(
                     It.Is<string>(s => s == mockCollectionLink),
-                    It.Is<KeyValueDocument>(doc => doc.Id == $"{collectionId}.{key}" && doc.CollectionId == collectionId && doc.Key == key && doc.Data == data),
+                    It.Is<KeyValueDocument>(doc => doc.Id == $"{collectionId.ToLowerInvariant()}.{key.ToLowerInvariant()}" && doc.CollectionId == collectionId && doc.Key == key && doc.Data == data),
                     It.IsAny<RequestOptions>(),
                     It.IsAny<bool>()),
                     Times.Once);
@@ -247,7 +247,7 @@ namespace Services.Test
             mockClient
                 .Verify(x => x.UpsertDocumentAsync(
                     It.Is<string>(s => s == mockCollectionLink),
-                    It.Is<KeyValueDocument>(doc => doc.Id == $"{collectionId}.{key}" && doc.CollectionId == collectionId && doc.Key == key && doc.Data == data),
+                    It.Is<KeyValueDocument>(doc => doc.Id == $"{collectionId.ToLowerInvariant()}.{key.ToLowerInvariant()}" && doc.CollectionId == collectionId && doc.Key == key && doc.Data == data),
                     It.IsAny<RequestOptions>(),
                     It.IsAny<bool>()),
                     Times.Once);
@@ -293,7 +293,7 @@ namespace Services.Test
 
             mockClient
                 .Verify(x => x.DeleteDocumentAsync(
-                    It.Is<string>(s => s == $"{mockCollectionLink}/docs/{collectionId}.{key}"),
+                    It.Is<string>(s => s == $"{mockCollectionLink}/docs/{collectionId.ToLowerInvariant()}.{key.ToLowerInvariant()}"),
                     It.IsAny<RequestOptions>()),
                     Times.Once);
         }
