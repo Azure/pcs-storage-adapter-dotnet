@@ -13,7 +13,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Helpers
         /// <returns>Generated document ID</returns>
         public static string GenerateId(string collectionId, string key)
         {
-            return $"{collectionId}.{key}";
+            return $"{collectionId.ToLowerInvariant()}.{key.ToLowerInvariant()}";
         }
     }
 }
