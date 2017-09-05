@@ -16,7 +16,7 @@ using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Wrappers;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
 {
-    public class DocumentDbKeyValueContainer : IKeyValueContainer, IDisposable
+    public sealed class DocumentDbKeyValueContainer : IKeyValueContainer, IDisposable
     {
         private readonly IDocumentClient client;
         private readonly IExceptionChecker exceptionChecker;
@@ -77,7 +77,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             await this.SetupStorageAsync();
 
             var query = this.client.CreateDocumentQuery<KeyValueDocument>(this.collectionLink)
-                .Where(doc => doc.CollectionId == collectionId)
+                .Where(doc => doc.CollectionId.ToLower() == collectionId.ToLower())
                 .ToList();
             return await Task.FromResult(query.Select(doc => new ValueServiceModel(doc)));
         }
@@ -236,7 +236,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
                 var indexing = new IndexingPolicy(index) { IndexingMode = IndexingMode.Consistent };
                 coll.IndexingPolicy = indexing;
 
-                // Partitoning can be enabled in case the storage adapter is used to store 100k+ records
+                // Partitioning can be enabled in case the storage adapter is used to store 100k+ records
                 //coll.PartitionKey = new PartitionKeyDefinition { Paths = new Collection<string> { "/CollectionId" } };
 
                 var dbUri = "/dbs/" + this.docDbDatabase;
@@ -280,7 +280,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
 
         #region IDisposable Support
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (!this.disposedValue)
             {

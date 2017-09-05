@@ -5,7 +5,7 @@ using Microsoft.Azure.Documents;
 
 namespace Services.Test.helpers
 {
-    static class ResourceExtension
+    internal static class ResourceExtension
     {
         public static void SetETag(this Resource resource, string etag)
         {
