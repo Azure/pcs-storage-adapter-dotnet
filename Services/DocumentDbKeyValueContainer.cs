@@ -146,7 +146,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             return new RequestOptions
             {
                 OfferThroughput = this.docDbRUs,
-                ConsistencyLevel = ConsistencyLevel.Strong
+                ConsistencyLevel = ConsistencyLevel.Session
             };
         }
 

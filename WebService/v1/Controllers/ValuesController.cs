@@ -97,7 +97,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Controllers
         {
             // Currently, there is no official document describing valid character set of document ID
             // We just verified and enabled characters below
-            var validCharacters = "_-";
+            var validCharacters = "_-.";
 
             if (!collectionId.All(c => char.IsLetterOrDigit(c) || validCharacters.Contains(c)))
             {
