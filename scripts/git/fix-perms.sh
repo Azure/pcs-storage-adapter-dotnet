@@ -22,7 +22,10 @@ chmod ugo+x ./scripts/docker/publish      2> /dev/null
 chmod ugo+x ./scripts/docker/content/*.sh 2> /dev/null
 chmod ugo+x ./scripts/git/setup           2> /dev/null
 chmod ugo+x ./scripts/git/*.sh            2> /dev/null
-chmod ugo+x ./scripts/iothub/*.sh         2> /dev/null
+
+if [ -d ./scripts/iothub ]; then
+  chmod ugo+x ./scripts/iothub/*.sh         2> /dev/null
+fi
 
 git update-index --chmod=+x ./scripts/build
 git update-index --chmod=+x ./scripts/compile
@@ -37,4 +40,7 @@ git update-index --chmod=+x ./scripts/docker/publish
 git update-index --chmod=+x ./scripts/docker/content/*.sh
 git update-index --chmod=+x ./scripts/git/setup
 git update-index --chmod=+x ./scripts/git/*.sh
-git update-index --chmod=+x ./scripts/iothub/*.sh
+
+if [ -d ./scripts/iothub ]; then
+  git update-index --chmod=+x ./scripts/iothub/*.sh
+fi
