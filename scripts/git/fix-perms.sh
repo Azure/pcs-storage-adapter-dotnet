@@ -1,26 +1,31 @@
-#!/usr/bin/env bash
+#!/usr/bin/env bash -e
 
 # Sometimes when creating bash scripts in Windows, bash scripts will not have
 # the +x flag carried over to Linux/MacOS. This script should help setting the
 # permission flags right.
 
-set -e
 APP_HOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && cd .. && pwd )/"
 cd $APP_HOME
 
-chmod ugo+x ./scripts/build
-chmod ugo+x ./scripts/compile
-chmod ugo+x ./scripts/run
-chmod ugo+x ./scripts/clean-up
-chmod ugo+x ./scripts/env-vars-check
-chmod ugo+x ./scripts/env-vars-setup
-chmod ugo+x ./scripts/travis
-chmod ugo+x ./scripts/docker/build
-chmod ugo+x ./scripts/docker/run
-chmod ugo+x ./scripts/docker/publish
+set +e
+
+chmod ugo+x ./scripts/build               2> /dev/null
+chmod ugo+x ./scripts/compile             2> /dev/null
+chmod ugo+x ./scripts/run                 2> /dev/null
+chmod ugo+x ./scripts/clean-up            2> /dev/null
+chmod ugo+x ./scripts/env-vars-check      2> /dev/null
+chmod ugo+x ./scripts/env-vars-setup      2> /dev/null
+chmod ugo+x ./scripts/travis              2> /dev/null
+chmod ugo+x ./scripts/docker/build        2> /dev/null
+chmod ugo+x ./scripts/docker/run          2> /dev/null
+chmod ugo+x ./scripts/docker/publish      2> /dev/null
 chmod ugo+x ./scripts/docker/content/*.sh 2> /dev/null
-chmod ugo+x ./scripts/git/setup
-chmod ugo+x ./scripts/git/*.sh
+chmod ugo+x ./scripts/git/setup           2> /dev/null
+chmod ugo+x ./scripts/git/*.sh            2> /dev/null
+
+if [ -d ./scripts/iothub ]; then
+  chmod ugo+x ./scripts/iothub/*.sh       2> /dev/null
+fi
 
 git update-index --chmod=+x ./scripts/build
 git update-index --chmod=+x ./scripts/compile
@@ -36,4 +41,6 @@ git update-index --chmod=+x ./scripts/docker/content/*.sh
 git update-index --chmod=+x ./scripts/git/setup
 git update-index --chmod=+x ./scripts/git/*.sh
 
-set +e
+if [ -d ./scripts/iothub ]; then
+  git update-index --chmod=+x ./scripts/iothub/*.sh
+fi
