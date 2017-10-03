@@ -9,20 +9,20 @@ cd $APP_HOME
 
 set +e
 
-chmod ugo+x ./scripts/build
-chmod ugo+x ./scripts/compile
-chmod ugo+x ./scripts/run
-chmod ugo+x ./scripts/clean-up
-chmod ugo+x ./scripts/env-vars-check
-chmod ugo+x ./scripts/env-vars-setup
-chmod ugo+x ./scripts/travis
-chmod ugo+x ./scripts/docker/build
-chmod ugo+x ./scripts/docker/run
-chmod ugo+x ./scripts/docker/publish
+chmod ugo+x ./scripts/build               2> /dev/null
+chmod ugo+x ./scripts/compile             2> /dev/null
+chmod ugo+x ./scripts/run                 2> /dev/null
+chmod ugo+x ./scripts/clean-up            2> /dev/null
+chmod ugo+x ./scripts/env-vars-check      2> /dev/null
+chmod ugo+x ./scripts/env-vars-setup      2> /dev/null
+chmod ugo+x ./scripts/travis              2> /dev/null
+chmod ugo+x ./scripts/docker/build        2> /dev/null
+chmod ugo+x ./scripts/docker/run          2> /dev/null
+chmod ugo+x ./scripts/docker/publish      2> /dev/null
 chmod ugo+x ./scripts/docker/content/*.sh 2> /dev/null
-chmod ugo+x ./scripts/git/setup
-chmod ugo+x ./scripts/git/*.sh
-chmod ugo+x ./scripts/iothub/*.sh
+chmod ugo+x ./scripts/git/setup           2> /dev/null
+chmod ugo+x ./scripts/git/*.sh            2> /dev/null
+chmod ugo+x ./scripts/iothub/*.sh         2> /dev/null
 
 git update-index --chmod=+x ./scripts/build
 git update-index --chmod=+x ./scripts/compile
