@@ -24,7 +24,7 @@ chmod ugo+x ./scripts/git/setup           2> /dev/null
 chmod ugo+x ./scripts/git/*.sh            2> /dev/null
 
 if [ -d ./scripts/iothub ]; then
-  chmod ugo+x ./scripts/iothub/*.sh         2> /dev/null
+  chmod ugo+x ./scripts/iothub/*.sh       2> /dev/null
 fi
 
 git update-index --chmod=+x ./scripts/build
