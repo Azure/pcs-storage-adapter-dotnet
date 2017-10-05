@@ -2,26 +2,14 @@
 
 # Note: use lowercase names for the Docker images
 DOCKER_IMAGE="azureiotpcs/pcs-storage-adapter-dotnet"
+# "testing" is the latest dev build, usually matching the code in the "master" branch
+DOCKER_TAG="$DOCKER_IMAGE:testing"
 
 # Debug|Release
 CONFIGURATION=Release
 
 APP_HOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && cd .. && pwd )/"
 source "$APP_HOME/scripts/.functions.sh"
-
-# The version is stored in a file, to avoid hardcoding it in multiple places
-APP_VERSION=$(cat "$APP_HOME/version")
-
-# Whether to update the "latest" tag of the Docker image
-UPDATE_LATEST="no"
-
-confirm_version() {
-    echo "Building version $APP_VERSION"
-    read -r -p "Do you want to update the 'latest' version too? [y/N] " response
-    if [[ $response =~ ^[Yy] ]]; then
-        UPDATE_LATEST="yes"
-    fi
-}
 
 compile() {
     check_dependency_dotnet
@@ -33,8 +21,12 @@ compile() {
 
 build_docker_image() {
     check_dependency_docker
+    check_dependency_git
 
     cd $APP_HOME
+
+    DOCKER_LABEL2="Commit=$(git log --pretty=format:'%H' -n 1)"
+    DOCKER_LABEL3="Date=$(/usr/bin/env date +%Y-%m-%dT%H:%M:%S)"
 
     rm -fR out/docker
     rm -fR WebService/bin/Docker
@@ -51,14 +43,12 @@ build_docker_image() {
 
     cd out/docker/
 
-    if [[ $UPDATE_LATEST == "no" ]]; then
-        docker build --tag "$DOCKER_IMAGE:$APP_VERSION" --squash --compress --label "Tags=azure,iot,pcs,Storage,.NET" .
-    else
-        docker build --tag "$DOCKER_IMAGE:$APP_VERSION" --tag "$DOCKER_IMAGE:latest" --squash --compress --label "Tags=Azure,IoT,Solutions,Storage,.NET" .
-    fi
+    docker build --squash --compress --tag $DOCKER_TAG \
+        --label "$DOCKER_LABEL2" --label "$DOCKER_LABEL3" .
+
+    echo "Run './scripts/docker/publish' to publish the image to the registry"
 }
 
-confirm_version
 compile
 build_docker_image
 

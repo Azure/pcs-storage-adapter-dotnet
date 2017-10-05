@@ -1,7 +1,9 @@
 @ECHO off & setlocal enableextensions enabledelayedexpansion
 
 :: Note: use lowercase names for the Docker images
-SET DOCKER_IMAGE="azureiotpcs/pcs-storage-adapter-dotnet"
+SET DOCKER_IMAGE=azureiotpcs/pcs-storage-adapter-dotnet
+:: "testing" is the latest dev build, usually matching the code in the "master" branch
+SET DOCKER_TAG=%DOCKER_IMAGE%:testing
 
 :: Debug|Release
 SET CONFIGURATION=Release
@@ -11,22 +13,13 @@ SET APP_HOME=%~dp0
 SET APP_HOME=%APP_HOME:~0,-16%
 cd %APP_HOME%
 
-:: The version is stored in a file, to avoid hardcoding it in multiple places
-set /P APP_VERSION=<%APP_HOME%/version
-
-
 :: Check dependencies
     dotnet --version > NUL 2>&1
     IF %ERRORLEVEL% NEQ 0 GOTO MISSING_DOTNET
     docker version > NUL 2>&1
     IF %ERRORLEVEL% NEQ 0 GOTO MISSING_DOCKER
-
-:: Whether to update the "latest" tag of the Docker image
-    SET UPDATE_LATEST="no"
-    echo Building version %APP_VERSION% - %DOCKER_IMAGE%:%APP_VERSION%
-    SET /p RESPONSE="Do you want to update the 'latest' version too? [y/N] "
-    IF "%RESPONSE%" == "y" (SET UPDATE_LATEST="yes")
-    IF "%RESPONSE%" == "Y" (SET UPDATE_LATEST="yes")
+    git version > NUL 2>&1
+    IF %ERRORLEVEL% NEQ 0 GOTO MISSING_GIT
 
 :: Restore packages and build the application
     call dotnet restore
@@ -35,6 +28,11 @@ set /P APP_VERSION=<%APP_HOME%/version
     IF %ERRORLEVEL% NEQ 0 GOTO FAIL
 
 :: Build the container image
+    git log --pretty=format:%%H -n 1 > tmpfile.tmp
+    SET /P COMMIT=<tmpfile.tmp
+    DEL tmpfile.tmp
+    SET DOCKER_LABEL2=Commit=%COMMIT%
+
     rmdir /s /q out\docker
     rmdir /s /q WebService\bin\Docker
 
@@ -49,12 +47,7 @@ set /P APP_VERSION=<%APP_HOME%/version
     copy scripts\docker\content\run.sh              out\docker\
 
     cd out\docker\
-
-    if %UPDATE_LATEST% == "no" (
-        docker build --tag %DOCKER_IMAGE%:%APP_VERSION% --squash --compress --label "Tags=Azure,IoT,Solutions,Storage,.NET" .
-    ) else (
-        docker build --tag %DOCKER_IMAGE%:%APP_VERSION% --tag %DOCKER_IMAGE%:latest --squash --compress --label "Tags=Azure,IoT,Solutions,Storage,.NET" .
-    )
+    docker build --squash --compress --tag %DOCKER_TAG% --label "%DOCKER_LABEL2%" .
 
     IF %ERRORLEVEL% NEQ 0 GOTO FAIL
 
@@ -71,6 +64,12 @@ goto :END
     echo ERROR: 'docker' command not found.
     echo Install Docker and make sure the 'docker' command is in the PATH.
     echo Docker installation: https://www.docker.com/community-edition#/download
+    exit /B 1
+
+:MISSING_GIT
+    echo ERROR: 'git' command not found.
+    echo Install Git and make sure the 'git' command is in the PATH.
+    echo Git installation: https://git-scm.com
     exit /B 1
 
 :FAIL

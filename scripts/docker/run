@@ -1,14 +1,10 @@
-#!/usr/bin/env bash
+#!/usr/bin/env bash -e
 
 # Note: use lowercase names for the Docker images
 DOCKER_IMAGE="azureiotpcs/pcs-storage-adapter-dotnet"
 
-set -e
 APP_HOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && cd .. && pwd )/"
 source "$APP_HOME/scripts/.functions.sh"
-
-# The version is stored in a file, to avoid hardcoding it in multiple places
-APP_VERSION=$(cat "$APP_HOME/version")
 
 run_container() {
     check_dependency_docker
@@ -17,12 +13,10 @@ run_container() {
 
     # Some settings are used to connect to an external dependency, e.g. Azure IoT Hub and IoT Hub Manager API
     # Depending on which settings and which dependencies are needed, edit the list of variables
-    echo "Starting StorageAdapter ..."
+    echo "Starting Storage Adapter ..."
     docker run -it -p 9022:9022 \
-        -e "PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING=$PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING" \
-        "$DOCKER_IMAGE:$APP_VERSION"
+        -e PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING \
+        "$DOCKER_IMAGE:testing"
 }
 
 run_container
-
-set +e
