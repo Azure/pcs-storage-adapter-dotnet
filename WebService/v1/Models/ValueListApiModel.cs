@@ -9,6 +9,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Models
 {
     public class ValueListApiModel
     {
+        [JsonProperty("Items")]
         public readonly IEnumerable<ValueApiModel> Items;
 
         [JsonProperty("$metadata")]

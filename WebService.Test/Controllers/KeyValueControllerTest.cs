@@ -11,6 +11,7 @@ using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Controllers;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Exceptions;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Wrappers;
 using Moq;
+using Newtonsoft.Json.Linq;
 using WebService.Test.helpers;
 using Xunit;
 
@@ -113,6 +114,9 @@ namespace WebService.Test.Controllers
                 .ReturnsAsync(models);
 
             var result = await controller.Get(collectionId);
+
+            var jsonResponse = JObject.FromObject(result);
+            Assert.True(jsonResponse.TryGetValue("Items", out JToken value));
 
             Assert.Equal(result.Items.Count(), models.Length);
             foreach (var item in result.Items)
