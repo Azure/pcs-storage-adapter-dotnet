@@ -16,10 +16,10 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
 
         public KeyValueDocument(string collectionId, string key, string data)
         {
-            Id = DocumentIdHelper.GenerateId(collectionId, key);
-            CollectionId = collectionId;
-            Key = key;
-            Data = data;
+            this.Id = DocumentIdHelper.GenerateId(collectionId, key);
+            this.CollectionId = collectionId;
+            this.Key = key;
+            this.Data = data;
         }
     }
 }

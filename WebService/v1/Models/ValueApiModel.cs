@@ -29,9 +29,9 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Models
 
             this.Metadata = new Dictionary<string, string>
             {
-                { "$type", $"Value;{Version.Number}" },
+                { "$type", $"Value;{Version.NUMBER}" },
                 { "$modified", model.Timestamp.ToString(CultureInfo.InvariantCulture) },
-                { "$uri", $"/{Version.Path}/collections/{model.CollectionId}/values/{model.Key}" }
+                { "$uri", $"/{Version.PATH}/collections/{model.CollectionId}/values/{model.Key}" }
             };
         }
     }

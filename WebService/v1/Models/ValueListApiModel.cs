@@ -17,12 +17,12 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Models
 
         public ValueListApiModel(IEnumerable<ValueServiceModel> models, string collectionId)
         {
-            Items = models.Select(m => new ValueApiModel(m));
+            this.Items = models.Select(m => new ValueApiModel(m));
 
-            Metadata = new Dictionary<string, string>
+            this.Metadata = new Dictionary<string, string>
             {
-                { "$type", $"ValueList;{Version.Number}" },
-                { "$uri", $"/{Version.Path}/collections/{collectionId}/values" }
+                { "$type", $"ValueList;{Version.NUMBER}" },
+                { "$uri", $"/{Version.PATH}/collections/{collectionId}/values" }
             };
         }
     }

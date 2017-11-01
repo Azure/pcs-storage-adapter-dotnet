@@ -25,13 +25,13 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Wrappers
                 throw new InvalidConfigurationException(message);
             }
 
-            docDbEndpoint = new Uri(match.Groups["endpoint"].Value);
-            docDbKey = match.Groups["key"].Value;
+            this.docDbEndpoint = new Uri(match.Groups["endpoint"].Value);
+            this.docDbKey = match.Groups["key"].Value;
         }
 
         public IDocumentClient Create()
         {
-            return new DocumentClient(docDbEndpoint, docDbKey);
+            return new DocumentClient(this.docDbEndpoint, this.docDbKey);
         }
     }
 }

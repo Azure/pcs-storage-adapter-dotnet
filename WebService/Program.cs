@@ -19,7 +19,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
             */
             Console.WriteLine($"[{Uptime.ProcessId}] Starting web service started, process ID: " + Uptime.ProcessId);
             Console.WriteLine($"[{Uptime.ProcessId}] Web service listening on port " + config.Port);
-            Console.WriteLine($"[{Uptime.ProcessId}] Web service health check at: http://127.0.0.1:" + config.Port + "/" + v1.Version.Path + "/status");
+            Console.WriteLine($"[{Uptime.ProcessId}] Web service health check at: http://127.0.0.1:" + config.Port + "/" + v1.Version.PATH + "/status");
 
             /*
             Kestrel is a cross-platform HTTP server based on libuv, a
