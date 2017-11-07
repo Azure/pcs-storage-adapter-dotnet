@@ -17,13 +17,13 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
     /// <summary>Web service configuration</summary>
     public class Config : IConfig
     {
-        private const string ApplicationKey = "StorageAdapter:";
-        private const string PortKey = ApplicationKey + "webservice_port";
-        private const string StorageTypeKey = ApplicationKey + "storageType";
-        private const string DocumentDbConnectionStringKey = ApplicationKey + "documentdb_connstring";
-        private const string DocumentDbDatabaseKey = ApplicationKey + "documentdb_database";
-        private const string DocumentDbCollectionKey = ApplicationKey + "documentdb_collection";
-        private const string DocumentDbRUsKey = ApplicationKey + "documentdb_RUs";
+        private const string APPLICATION_KEY = "StorageAdapter:";
+        private const string PORT_KEY = APPLICATION_KEY + "webservice_port";
+        private const string STORAGE_TYPE_KEY = APPLICATION_KEY + "storageType";
+        private const string DOCUMENT_DB_CONNECTION_STRING_KEY = APPLICATION_KEY + "documentdb_connstring";
+        private const string DOCUMENT_DB_DATABASE_KEY = APPLICATION_KEY + "documentdb_database";
+        private const string DOCUMENT_DB_COLLECTION_KEY = APPLICATION_KEY + "documentdb_collection";
+        private const string DOCUMENT_DB_RUS_KEY = APPLICATION_KEY + "documentdb_RUs";
 
         /// <summary>Web service listening port</summary>
         public int Port { get; }
@@ -33,10 +33,10 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
 
         public Config(IConfigData configData)
         {
-            this.Port = configData.GetInt(PortKey);
+            this.Port = configData.GetInt(PORT_KEY);
 
-            var storageType = configData.GetString(StorageTypeKey).ToLowerInvariant();
-            var documentDbConnString = configData.GetString(DocumentDbConnectionStringKey);
+            var storageType = configData.GetString(STORAGE_TYPE_KEY).ToLowerInvariant();
+            var documentDbConnString = configData.GetString(DOCUMENT_DB_CONNECTION_STRING_KEY);
             if (storageType == "documentdb" &&
                 (string.IsNullOrEmpty(documentDbConnString)
                  || documentDbConnString.StartsWith("${")
@@ -59,9 +59,9 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
             {
                 StorageType = storageType,
                 DocumentDbConnString = documentDbConnString,
-                DocumentDbDatabase = configData.GetString(DocumentDbDatabaseKey),
-                DocumentDbCollection = configData.GetString(DocumentDbCollectionKey),
-                DocumentDbRUs = configData.GetInt(DocumentDbRUsKey),
+                DocumentDbDatabase = configData.GetString(DOCUMENT_DB_DATABASE_KEY),
+                DocumentDbCollection = configData.GetString(DOCUMENT_DB_COLLECTION_KEY),
+                DocumentDbRUs = configData.GetInt(DOCUMENT_DB_RUS_KEY),
             };
         }
     }

@@ -27,7 +27,7 @@ namespace WebService.Test.IntegrationTests
         /// Bootstrap a real HTTP server and test a request to the
         /// status endpoint.
         /// </summary>
-        [Fact, Trait(Constants.Type, Constants.IntegrationTest)]
+        [Fact, Trait(Constants.TYPE, Constants.INTEGRATION_TEST)]
         public void TheServiceIsHealthyViaHttpServer()
         {
             // Arrange
@@ -53,7 +53,7 @@ namespace WebService.Test.IntegrationTests
         /// Bootstrap a test server and test a request to the
         /// status endpoint
         /// </summary>
-        [Fact, Trait(Constants.Type, Constants.IntegrationTest)]
+        [Fact, Trait(Constants.TYPE, Constants.INTEGRATION_TEST)]
         public void TheServiceIsHealthyViaTestServer()
         {
             // Arrange

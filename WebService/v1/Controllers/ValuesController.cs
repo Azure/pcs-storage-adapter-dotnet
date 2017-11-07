@@ -15,12 +15,12 @@ using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Wrappers;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Controllers
 {
-    [Route(Version.Path), TypeFilter(typeof(ExceptionsFilterAttribute))]
+    [Route(Version.PATH), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class ValuesController : Controller
     {
         private readonly IKeyValueContainer container;
         private readonly IKeyGenerator keyGenerator;
-        private readonly ILogger logger;
+        private readonly ILogger log;
 
         public ValuesController(
             IKeyValueContainer container,
@@ -29,15 +29,15 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Controllers
         {
             this.container = container;
             this.keyGenerator = keyGenerator;
-            this.logger = logger;
+            this.log = logger;
         }
 
         [HttpGet("collections/{collectionId}/values/{key}")]
         public async Task<ValueApiModel> Get(string collectionId, string key)
         {
-            EnsureValidId(collectionId, key);
+            this.EnsureValidId(collectionId, key);
 
-            var result = await container.GetAsync(collectionId, key);
+            var result = await this.container.GetAsync(collectionId, key);
 
             return new ValueApiModel(result);
         }
@@ -45,42 +45,40 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Controllers
         [HttpGet("collections/{collectionId}/values")]
         public async Task<ValueListApiModel> Get(string collectionId)
         {
-            EnsureValidId(collectionId);
+            this.EnsureValidId(collectionId);
 
-            var result = await container.GetAllAsync(collectionId);
+            var result = await this.container.GetAllAsync(collectionId);
 
             return new ValueListApiModel(result, collectionId);
         }
 
         [HttpPost("collections/{collectionId}/values")]
-        public async Task<ValueApiModel> Post(string collectionId, [FromBody]ValueServiceModel model)
+        public async Task<ValueApiModel> Post(string collectionId, [FromBody] ValueServiceModel model)
         {
             if (model == null)
             {
                 throw new InvalidInputException("The request is empty");
             }
 
-            string key = keyGenerator.Generate();
-            EnsureValidId(collectionId, key);
+            string key = this.keyGenerator.Generate();
+            this.EnsureValidId(collectionId, key);
 
-            var result = await container.CreateAsync(collectionId, key, model);
+            var result = await this.container.CreateAsync(collectionId, key, model);
 
             return new ValueApiModel(result);
         }
 
         [HttpPut("collections/{collectionId}/values/{key}")]
-        public async Task<ValueApiModel> Put(string collectionId, string key, [FromBody]ValueServiceModel model)
+        public async Task<ValueApiModel> Put(string collectionId, string key, [FromBody] ValueServiceModel model)
         {
             if (model == null)
             {
                 throw new InvalidInputException("The request is empty");
             }
 
-            EnsureValidId(collectionId, key);
+            this.EnsureValidId(collectionId, key);
 
-            var result = model.ETag == null ?
-                await container.CreateAsync(collectionId, key, model) :
-                await container.UpsertAsync(collectionId, key, model);
+            var result = model.ETag == null ? await this.container.CreateAsync(collectionId, key, model) : await this.container.UpsertAsync(collectionId, key, model);
 
             return new ValueApiModel(result);
         }
@@ -88,9 +86,9 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Controllers
         [HttpDelete("collections/{collectionId}/values/{key}")]
         public async Task Delete(string collectionId, string key)
         {
-            EnsureValidId(collectionId, key);
+            this.EnsureValidId(collectionId, key);
 
-            await container.DeleteAsync(collectionId, key);
+            await this.container.DeleteAsync(collectionId, key);
         }
 
         private void EnsureValidId(string collectionId, string key = "")
@@ -102,14 +100,14 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Controllers
             if (!collectionId.All(c => char.IsLetterOrDigit(c) || validCharacters.Contains(c)))
             {
                 var message = $"Invalid collectionId: '{collectionId}'";
-                logger.Info(message, () => new { collectionId });
+                this.log.Info(message, () => new { collectionId });
                 throw new BadRequestException(message);
             }
 
             if (key.Any() && !key.All(c => char.IsLetterOrDigit(c) || validCharacters.Contains(c)))
             {
                 var message = $"Invalid key: '{key}'";
-                logger.Info(message, () => new { key });
+                this.log.Info(message, () => new { key });
                 throw new BadRequestException(message);
             }
 
@@ -121,7 +119,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Controllers
             if (id.Length > 255)
             {
                 var message = $"The collectionId/Key are too long: '{collectionId}', '{key}'";
-                logger.Info(message, () => new { collectionId, key, id });
+                this.log.Info(message, () => new { collectionId, key, id });
                 throw new BadRequestException(message);
             }
         }
