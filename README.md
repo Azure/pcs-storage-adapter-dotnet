@@ -48,7 +48,7 @@ if you need help finding it.
 
 ## Running the service with IntelliJ Rider
 1. Open the solution using the `pcs-storage-adapter.sln` file.
-1. When the solution is loaded, got to `Run -> Edit Configurations` and
+1. When the solution is loaded, go to `Run -> Edit Configurations` and
    create a new `.NET Project` configuration.
 1. In the configuration select the WebService project
 1. Add a new environment variable with name
