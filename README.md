@@ -21,7 +21,8 @@ How to use the microservice
 ## Quickstart - Running the service with Docker
 
 1. Install Docker Compose: https://docs.docker.com/compose/install
-1. Create your [Azure Cosmos DB account](https://ms.portal.azure.com/#create/Microsoft.DocumentDB) with API type **DocumentDB**
+1. Create your [Azure Cosmos DB account](https://ms.portal.azure.com/#create/Microsoft.DocumentDB) with API type **SQL**
+1. Change the default consistency in your Azure Cosmos DB account to **STRONG**
 1. Find your Azure Cosmos DB account connection string.  See [Update your Connection Strings](https://docs.microsoft.com/en-us/azure/cosmos-db/create-documentdb-dotnet#update-your-connection-string) 
 if you need help finding it.
 1. Store the "Azure Cosmos DB account connection string" in the [env-vars-setup](scripts)
@@ -36,7 +37,8 @@ if you need help finding it.
 1. Install any edition of [Visual Studio 2017](https://www.visualstudio.com/downloads/). When installing check ".NET Core" workload. 	
     a. If you already have Visual Studio installed, then ensure you have [.NET Core Tools for Visual Studio 2017](https://www.microsoft.com/net/core#windowsvs2017) installed.
 1.  Open the solution using the pcs-storage-adapter.sln file.
-1. Create your [Azure Cosmos DB account](https://ms.portal.azure.com/#create/Microsoft.DocumentDB) with API type **DocumentDB**
+1. Create your [Azure Cosmos DB account](https://ms.portal.azure.com/#create/Microsoft.DocumentDB) with API type **SQL**
+1. Change the default consistency in your Azure Cosmos DB account to **STRONG**
 1. Open the solution in Visual Studio
 1. Either in the project properties Visual Studio or in your system, define the following required environment variables for the both the WebService
     * `PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING` = {your DocumentDB connection string}
