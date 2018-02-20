@@ -13,7 +13,7 @@
             "launchBrowser": true,
             "launchUrl": "http://localhost:9022/v1/status",
             "environmentVariables": {
-                "PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING": "..."
+                "PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING": "AccountEndpoint=https://documentdb-ajz3u.documents.azure.com:443/;AccountKey=UnAE7hZS4TWima8YY6ryJQEfu8PBSf42SKlbKnogKYhxbJalAZt0yjZGc0yorFPoX4VCAD0oGKQosXA8Q7ub5g==;"
             }
         },
         "WebService": {
@@ -21,7 +21,7 @@
             "launchBrowser": true,
             "launchUrl": "http://localhost:9022/v1/status",
             "environmentVariables": {
-                "PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING": "..."
+                "PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING": "AccountEndpoint=https://documentdb-ajz3u.documents.azure.com:443/;AccountKey=UnAE7hZS4TWima8YY6ryJQEfu8PBSf42SKlbKnogKYhxbJalAZt0yjZGc0yorFPoX4VCAD0oGKQosXA8Q7ub5g==;"
             },
             "applicationUrl": "http://localhost:9022/v1/status"
         }
