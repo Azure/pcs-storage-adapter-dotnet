@@ -5,8 +5,8 @@ set -e
 
 # Do not run during Travis CI builds, to avoid failures in case of third party PRs
 if [[ "$TRAVIS_SECURE_ENV_VARS" == "false" ]]; then
-  echo "Info: skipping checks during Travis CI build"
-  exit 0
+    echo "Info: skipping checks during Travis CI build"
+    exit 0
 fi
 
 if [[ -z "$PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING" ]]; then
