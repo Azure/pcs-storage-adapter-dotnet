@@ -1,29 +1,29 @@
 {
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:9022/",
-      "sslPort": 0
-    }
-  },
-  "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "http://localhost:9022/v1/status",
-      "environmentVariables": {
-        "PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING": "AccountEndpoint=https://parvez510a3fb.documents.azure.com:443/;AccountKey=eMjN37GK8KTapHO20bZbecX0K1C3Pgjk1wv8uF9nxuSIMt8xJ51PP03kZQIvEQvuRMKLnTMPJLSStzQPuxOozw==;"
-      }
+    "iisSettings": {
+        "windowsAuthentication": false,
+        "anonymousAuthentication": true,
+        "iisExpress": {
+            "applicationUrl": "http://localhost:9022/",
+            "sslPort": 0
+        }
     },
-    "WebService": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "http://localhost:9022/v1/status",
-      "environmentVariables": {
-        "PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING": "$(PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING)"
-      },
-      "applicationUrl": "http://localhost:9022/v1/status"
+    "profiles": {
+        "IIS Express": {
+            "commandName": "IISExpress",
+            "launchBrowser": true,
+            "launchUrl": "http://localhost:9022/v1/status",
+            "environmentVariables": {
+                "PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING": "$(PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING)"
+            }
+        },
+        "WebService": {
+            "commandName": "Project",
+            "launchBrowser": true,
+            "launchUrl": "http://localhost:9022/v1/status",
+            "environmentVariables": {
+                "PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING": "$(PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING)"
+            },
+            "applicationUrl": "http://localhost:9022/v1/status"
+        }
     }
-  }
 }
