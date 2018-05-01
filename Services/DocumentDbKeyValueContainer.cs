@@ -203,7 +203,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
                 this.log.Info("Creating DocumentDb database",
                     () => new { this.docDbDatabase });
                 var db = new Database { Id = this.docDbDatabase };
-                await this.client.CreateDatabaseAsync(db, this.docDbOptions);
+                await this.client.CreateDatabaseAsync(db);
             }
             catch (DocumentClientException e)
             {
