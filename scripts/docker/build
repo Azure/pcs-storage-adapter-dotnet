@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright (c) Microsoft. All rights reserved.
-# Note: Bash doesn't parse very well shebang arguments (e.g "-e") since version 4.
+# Note: Windows Bash doesn't support shebang extra params
 set -e
 
 # Note: use lowercase names for the Docker images
