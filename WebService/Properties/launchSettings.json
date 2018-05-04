@@ -13,7 +13,7 @@
             "launchBrowser": true,
             "launchUrl": "http://localhost:9022/v1/status",
             "environmentVariables": {
-                "PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING": "..."
+                "PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING": "$(PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING)"
             }
         },
         "WebService": {
@@ -21,7 +21,7 @@
             "launchBrowser": true,
             "launchUrl": "http://localhost:9022/v1/status",
             "environmentVariables": {
-                "PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING": "..."
+                "PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING": "$(PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING)"
             },
             "applicationUrl": "http://localhost:9022/v1/status"
         }
