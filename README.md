@@ -36,14 +36,14 @@ if you need help finding it.
 
 The service can be started from any C# IDE and from the command line.
 The only difference you might notice, is how environment variables
-are configured. See the documentation below for more information.
+are configured. See the [Configuration and Environment variables](#configuration-and-environment-variables) documentation below for more information.
 
 1. [Install .NET Core 2.x][dotnet-install]
 1. Install any recent edition of Visual Studio (Windows/MacOS) or Visual Studio Code (Windows/MacOS/Linux).
     a. If you already have Visual Studio installed, then ensure you have [.NET Core Tools for Visual Studio 2017](https://www.microsoft.com/net/core#windowsvs2017) installed.
 1. Create your [Azure Cosmos DB account](https://ms.portal.azure.com/#create/Microsoft.DocumentDB) with API type **DocumentDB**
 1. Open the solution in Visual Studio or VS Code
-1. Either in the project properties Visual Studio or in your system, define the following required environment variables for the both the WebService
+1. Define the following environment variables. See [Configuration and Environment variables](#configuration-and-environment-variables) for detailed information for setting these for your enviroment.
     * `PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING` = {your DocumentDB connection string}
 1. Start the WebService project (e.g. press F5)
 1. Using an HTTP client like [Postman](https://www.getpostman.com),
