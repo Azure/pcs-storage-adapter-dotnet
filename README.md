@@ -32,15 +32,20 @@ if you need help finding it.
    [RESTful API](https://github.com/Azure/pcs-storage-adapter-dotnet/wiki/API-specs#create-key-value-with-post-id-generated-by-the-service)
    to create a collection.
 
-## Running the service with Visual Studio
-1. Install any edition of [Visual Studio 2017](https://www.visualstudio.com/downloads/). When installing check ".NET Core" workload. 	
+## Running the service with Visual Studio or VS Code
+
+The service can be started from any C# IDE and from the command line.
+The only difference you might notice, is how environment variables
+are configured. See the documentation below for more information.
+
+1. [Install .NET Core 2.x][dotnet-install]
+1. Install any recent edition of Visual Studio (Windows/MacOS) or Visual Studio Code (Windows/MacOS/Linux).
     a. If you already have Visual Studio installed, then ensure you have [.NET Core Tools for Visual Studio 2017](https://www.microsoft.com/net/core#windowsvs2017) installed.
-1.  Open the solution using the pcs-storage-adapter.sln file.
 1. Create your [Azure Cosmos DB account](https://ms.portal.azure.com/#create/Microsoft.DocumentDB) with API type **DocumentDB**
-1. Open the solution in Visual Studio
+1. Open the solution in Visual Studio or VS Code
 1. Either in the project properties Visual Studio or in your system, define the following required environment variables for the both the WebService
     * `PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING` = {your DocumentDB connection string}
-1. In Visual Studio, start the WebService project
+1. Start the WebService project (e.g. press F5)
 1. Using an HTTP client like [Postman](https://www.getpostman.com),
    use the
    [RESTful API](https://github.com/Azure/pcs-storage-adapter-dotnet/wiki/API-specs)
@@ -114,22 +119,27 @@ The configuration file in the repository references some environment
 variables that need to created at least once. Depending on your OS and
 the IDE, there are several ways to manage environment variables:
 
-* For Windows users, the [env-vars-setup.cmd](scripts/env-vars-setup.cmd)
-  script needs to be prepared and executed just once. When executed, the
-  settings will persist across terminal sessions and reboots.
-* For Linux and OSX environments, the [env-vars-setup](scripts/env-vars-setup)
-  script needs to be executed every time a new console is opened.
-  Depending on the OS and terminal, there are ways to persist values
-  globally, for more information these pages should help:
-  * https://stackoverflow.com/questions/13046624/how-to-permanently-export-a-variable-in-linux
-  * https://stackoverflow.com/questions/135688/setting-environment-variables-in-os-x
-  * https://help.ubuntu.com/community/EnvironmentVariables
-* Visual Studio: env. vars can be set also from Visual Studio, under Project
-  Properties, in the left pane select "Configuration Properties" and
-  "Environment", to get to a section where you can add multiple variables.
-* IntelliJ Rider: env. vars can be set in each Run Configuration, similarly to
-  IntelliJ IDEA 
-  (https://www.jetbrains.com/help/idea/run-debug-configuration-application.html)
+1. If you're using Visual Studio or Visual Studio for Mac, the environment
+   variables are loaded from the project settings. Right click on WebService,
+   and select Options/Properties, and find the section with the list of env
+   vars. See [WebService/Properties/launchSettings.json](WebService/Properties/launchSettings.json).
+1. Visual Studio Code loads the environment variables from
+   [.vscode/launch.json](.vscode/launch.json)
+1. When running the service **with Docker** or **from the command line**, the
+   application will inherit environment variables values from the system. 
+   * [This page][windows-envvars-howto-url] describes how to setup env vars
+     in Windows. We suggest to edit and execute once the
+     [env-vars-setup.cmd](scripts/env-vars-setup.cmd) script included in the
+     repository. The settings will persist across terminal sessions and reboots.
+   * For Linux and MacOS, we suggest to edit and execute
+     [env-vars-setup](scripts/env-vars-setup) each time, before starting the
+     service. Depending on OS and terminal, there are ways to persist values
+     globally, for more information these pages should help:
+     * https://stackoverflow.com/questions/13046624/how-to-permanently-export-a-variable-in-linux
+     * https://stackoverflow.com/questions/135688/setting-environment-variables-in-os-x
+     * https://help.ubuntu.com/community/EnvironmentVariables
+1. IntelliJ Rider: env. vars can be set in each Run Configuration, similarly to
+  IntelliJ IDEA (https://www.jetbrains.com/help/idea/run-debug-configuration-application.html)
 
 Contributing to the solution
 ============================
