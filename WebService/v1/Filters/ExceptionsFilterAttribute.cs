@@ -94,14 +94,14 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Filters
 
             if (stackTrace)
             {
-                error["StackTrace"] = e.StackTrace.Split(new[] { "\n" }, StringSplitOptions.None);
+                error["StackTrace"] = e.StackTrace?.Split(new[] { "\n" }, StringSplitOptions.None);
 
                 if (e.InnerException != null)
                 {
                     e = e.InnerException;
                     error["InnerExceptionMessage"] = e.Message;
                     error["InnerExceptionType"] = e.GetType().FullName;
-                    error["InnerExceptionStackTrace"] = e.StackTrace.Split(new[] { "\n" }, StringSplitOptions.None);
+                    error["InnerExceptionStackTrace"] = e.StackTrace?.Split(new[] { "\n" }, StringSplitOptions.None);
                 }
             }
 
