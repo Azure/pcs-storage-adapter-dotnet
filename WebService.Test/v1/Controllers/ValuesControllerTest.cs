@@ -15,16 +15,16 @@ using Newtonsoft.Json.Linq;
 using WebService.Test.helpers;
 using Xunit;
 
-namespace WebService.Test.Controllers
+namespace WebService.Test.v1.Controllers
 {
-    public class KeyValueControllerTest
+    public class ValuesControllerTest
     {
         private readonly Mock<IKeyValueContainer> mockContainer;
         private readonly Mock<IKeyGenerator> mockGenerator;
         private readonly ValuesController controller;
         private readonly Random rand = new Random();
 
-        public KeyValueControllerTest()
+        public ValuesControllerTest()
         {
             this.mockContainer = new Mock<IKeyValueContainer>();
             this.mockGenerator = new Mock<IKeyGenerator>();
@@ -128,6 +128,7 @@ namespace WebService.Test.Controllers
                 Assert.Equal(item.Metadata["$modified"], model.Timestamp.ToString(CultureInfo.InvariantCulture));
                 Assert.Equal(item.Metadata["$uri"], $"/v1/collections/{collectionId}/values/{model.Key}");
             }
+
             Assert.Equal(result.Metadata["$type"], "ValueList;1");
             Assert.Equal(result.Metadata["$uri"], $"/v1/collections/{collectionId}/values");
 
