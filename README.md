@@ -24,16 +24,13 @@ How to use the microservice
 ## Quickstart - Running the service with Docker
 
 1. Install Docker Compose: https://docs.docker.com/compose/install
-1. Create your [Azure Cosmos DB account](https://ms.portal.azure.com/#create/Microsoft.DocumentDB) with API type **DocumentDB**
+1. Create your [Azure Cosmos DB account](https://ms.portal.azure.com/#create/Microsoft.DocumentDB) with API type **SQL**
 1. Find your Azure Cosmos DB account connection string.  See [Update your Connection Strings](https://docs.microsoft.com/en-us/azure/cosmos-db/create-documentdb-dotnet#update-your-connection-string) 
 if you need help finding it.
 1. Store the "Azure Cosmos DB account connection string" in the [env-vars-setup](scripts)
    script, then run the script.
 1. Run the Storage Adapter service using docker compose [docker-compose up](scripts)
-1. Use an HTTP client such as [Postman](https://www.getpostman.com),
-   to exercise the 
-   [RESTful API](https://github.com/Azure/pcs-storage-adapter-dotnet/wiki/API-specs#create-key-value-with-post-id-generated-by-the-service)
-   to create a collection.
+1. Use an HTTP client such as [Postman](https://www.getpostman.com), to exercise the [RESTful API](https://github.com/Azure/pcs-storage-adapter-dotnet/wiki/API-specs#create-key-value-with-post-id-generated-by-the-service) to create a collection.
 
 ## Running the service with Visual Studio or VS Code
 
@@ -44,15 +41,12 @@ are configured. See the [Configuration and Environment variables](#configuration
 1. [Install .NET Core 2.x][dotnet-install]
 1. Install any recent edition of Visual Studio (Windows/MacOS) or Visual Studio Code (Windows/MacOS/Linux).
     a. If you already have Visual Studio installed, then ensure you have [.NET Core Tools for Visual Studio 2017](https://www.microsoft.com/net/core#windowsvs2017) installed.
-1. Create your [Azure Cosmos DB account](https://ms.portal.azure.com/#create/Microsoft.DocumentDB) with API type **DocumentDB**
+1. Create your [Azure Cosmos DB account](https://ms.portal.azure.com/#create/Microsoft.DocumentDB) with API type **SQL**
 1. Open the solution in Visual Studio or VS Code
 1. Define the following environment variables. See [Configuration and Environment variables](#configuration-and-environment-variables) for detailed information for setting these for your enviroment.
     * `PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING` = {your DocumentDB connection string}
 1. Start the WebService project (e.g. press F5)
-1. Using an HTTP client like [Postman](https://www.getpostman.com),
-   use the
-   [RESTful API](https://github.com/Azure/pcs-storage-adapter-dotnet/wiki/API-specs)
-   to create a simulation.
+1. Using an HTTP client like [Postman](https://www.getpostman.com), use the [RESTful API](https://github.com/Azure/pcs-storage-adapter-dotnet/wiki/API-specs) to create a collection.
 
 ## Running the service with IntelliJ Rider
 1. Open the solution using the `pcs-storage-adapter.sln` file.
@@ -66,6 +60,7 @@ are configured. See the [Configuration and Environment variables](#configuration
 1. You should see the service bootstrap messages in IntelliJ Run window,
    with details such as the URL where the web service is running, plus
    the service logs.
+1. Using an HTTP client like [Postman](https://www.getpostman.com), use the [RESTful API](https://github.com/Azure/pcs-storage-adapter-dotnet/wiki/API-specs) to create a collection.
 
 ## Project Structure
 
