@@ -2,6 +2,7 @@
 
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
@@ -64,7 +65,8 @@ namespace Services.Test
             this.mockClient
                 .Setup(x => x.ReadDocumentAsync(
                     It.IsAny<string>(),
-                    It.IsAny<RequestOptions>()))
+                    It.IsAny<RequestOptions>(),
+                    It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
             var result = await this.container.GetAsync(collectionId, key);
@@ -78,7 +80,8 @@ namespace Services.Test
             this.mockClient
                 .Verify(x => x.ReadDocumentAsync(
                         It.Is<string>(s => s == $"{mockCollectionLink}/docs/{collectionId.ToLowerInvariant()}.{key.ToLowerInvariant()}"),
-                        It.IsAny<RequestOptions>()),
+                        It.IsAny<RequestOptions>(),
+                        It.IsAny<CancellationToken>()),
                     Times.Once);
         }
 
@@ -91,7 +94,8 @@ namespace Services.Test
             this.mockClient
                 .Setup(x => x.ReadDocumentAsync(
                     It.IsAny<string>(),
-                    It.IsAny<RequestOptions>()))
+                    It.IsAny<RequestOptions>(),
+                    It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new ResourceNotFoundException());
 
             await Assert.ThrowsAsync<ResourceNotFoundException>(async () =>
@@ -161,7 +165,8 @@ namespace Services.Test
                     It.IsAny<string>(),
                     It.IsAny<object>(),
                     It.IsAny<RequestOptions>(),
-                    It.IsAny<bool>()))
+                    It.IsAny<bool>(),
+                    It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
             var result = await this.container.CreateAsync(collectionId, key, new ValueServiceModel
@@ -180,7 +185,8 @@ namespace Services.Test
                         It.Is<string>(s => s == mockCollectionLink),
                         It.Is<KeyValueDocument>(doc => doc.Id == $"{collectionId.ToLowerInvariant()}.{key.ToLowerInvariant()}" && doc.CollectionId == collectionId && doc.Key == key && doc.Data == data),
                         It.IsAny<RequestOptions>(),
-                        It.IsAny<bool>()),
+                        It.IsAny<bool>(),
+                        It.IsAny<CancellationToken>()),
                     Times.Once);
         }
 
@@ -196,7 +202,8 @@ namespace Services.Test
                     It.IsAny<string>(),
                     It.IsAny<object>(),
                     It.IsAny<RequestOptions>(),
-                    It.IsAny<bool>()))
+                    It.IsAny<bool>(),
+                    It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new ConflictingResourceException());
 
             await Assert.ThrowsAsync<ConflictingResourceException>(async () =>
@@ -229,7 +236,8 @@ namespace Services.Test
                     It.IsAny<string>(),
                     It.IsAny<object>(),
                     It.IsAny<RequestOptions>(),
-                    It.IsAny<bool>()))
+                    It.IsAny<bool>(),
+                    It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
             var result = await this.container.UpsertAsync(collectionId, key, new ValueServiceModel
@@ -249,7 +257,8 @@ namespace Services.Test
                         It.Is<string>(s => s == mockCollectionLink),
                         It.Is<KeyValueDocument>(doc => doc.Id == $"{collectionId.ToLowerInvariant()}.{key.ToLowerInvariant()}" && doc.CollectionId == collectionId && doc.Key == key && doc.Data == data),
                         It.IsAny<RequestOptions>(),
-                        It.IsAny<bool>()),
+                        It.IsAny<bool>(),
+                        It.IsAny<CancellationToken>()),
                     Times.Once);
         }
 
@@ -266,7 +275,8 @@ namespace Services.Test
                     It.IsAny<string>(),
                     It.IsAny<object>(),
                     It.IsAny<RequestOptions>(),
-                    It.IsAny<bool>()))
+                    It.IsAny<bool>(),
+                    It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new ConflictingResourceException());
 
             await Assert.ThrowsAsync<ConflictingResourceException>(async () =>
@@ -286,7 +296,8 @@ namespace Services.Test
             this.mockClient
                 .Setup(x => x.DeleteDocumentAsync(
                     It.IsAny<string>(),
-                    It.IsAny<RequestOptions>()))
+                    It.IsAny<RequestOptions>(),
+                    It.IsAny<CancellationToken>()))
                 .ReturnsAsync((ResourceResponse<Document>) null);
 
             await this.container.DeleteAsync(collectionId, key);
@@ -294,7 +305,8 @@ namespace Services.Test
             this.mockClient
                 .Verify(x => x.DeleteDocumentAsync(
                         It.Is<string>(s => s == $"{mockCollectionLink}/docs/{collectionId.ToLowerInvariant()}.{key.ToLowerInvariant()}"),
-                        It.IsAny<RequestOptions>()),
+                        It.IsAny<RequestOptions>(),
+                        It.IsAny<CancellationToken>()),
                     Times.Once);
         }
 
@@ -307,7 +319,8 @@ namespace Services.Test
             this.mockClient
                 .Setup(x => x.DeleteDocumentAsync(
                     It.IsAny<string>(),
-                    It.IsAny<RequestOptions>()))
+                    It.IsAny<RequestOptions>(),
+                    It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new ResourceNotFoundException());
 
             await this.container.DeleteAsync(collectionId, key);

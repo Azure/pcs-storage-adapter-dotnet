@@ -4,9 +4,9 @@ using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
@@ -20,11 +20,12 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
         public IContainer ApplicationContainer { get; private set; }
 
         // Invoked by `Program.cs`
-        public Startup(IHostingEnvironment env)
+        public Startup(IHostEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddIniFile("appsettings.ini", optional: false, reloadOnChange: true);
+                .AddIniFile("appsettings.ini", optional: false, reloadOnChange: true)
+                .AddEnvironmentVariables();
             this.Configuration = builder.Build();
         }
 
@@ -33,8 +34,11 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
         // Configure method below.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            // Console logging
+            services.AddLogging(builder => builder.AddConsole());
+
             // Add controllers as services so they'll be resolved.
-            services.AddMvc().AddControllersAsServices();
+            services.AddControllers().AddNewtonsoftJson();
 
             this.ApplicationContainer = DependencyResolution.Setup(services);
 
@@ -46,13 +50,10 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
         // method above. Use this method to add middleware.
         public void Configure(
             IApplicationBuilder app,
-            IHostingEnvironment env,
-            ILoggerFactory loggerFactory,
-            IApplicationLifetime appLifetime)
+            IHostApplicationLifetime appLifetime)
         {
-            loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
-
-            app.UseMvc();
+            app.UseRouting();
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
 
             // If you want to dispose of resources that have been resolved in the
             // application container, register for the "ApplicationStopped" event.
