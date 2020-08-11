@@ -40,7 +40,10 @@ cd %APP_HOME%
 
     mkdir out\docker\webservice
 
-    dotnet publish WebService      --configuration %CONFIGURATION% --output bin\Docker
+    :: Note that .Net 3 and .Net 2 handle relative paths differently (when using the --output flag)
+    :: See https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-publish if the output files
+    :: are missing.
+    dotnet publish WebService      --configuration %CONFIGURATION% --output WebService\bin\Docker
 
     xcopy /s WebService\bin\Docker\*       out\docker\webservice\
 

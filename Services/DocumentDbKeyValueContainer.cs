@@ -232,7 +232,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
                     () => new { this.docDbCollection });
                 var coll = new DocumentCollection { Id = this.docDbCollection };
 
-                var index = Index.Range(DataType.String, -1);
+                var index = Documents.Index.Range(DataType.String, -1);
                 var indexing = new IndexingPolicy(index) { IndexingMode = IndexingMode.Consistent };
                 coll.IndexingPolicy = indexing;
 

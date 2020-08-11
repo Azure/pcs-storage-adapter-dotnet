@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.0.3-runtime-jessie
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 
 MAINTAINER Devis Lucato (https://github.com/dluc)
 
